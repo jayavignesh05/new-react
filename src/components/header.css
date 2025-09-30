@@ -1,0 +1,120 @@
+.app-header {
+  height: 70px;
+  background-color: #ffffff;
+  padding: 10px 40px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  color: #333;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+}
+
+.profile-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: "Inter", sans-serif;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.profile-icon p {
+  margin: 0;
+}
+
+.header-profile-img {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 130%;
+  right: 1%;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  width: 300px;
+  padding: 12px;
+  text-align: left;
+  
+}
+
+.profile-icon:hover .profile-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  z-index: 1001;
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+}
+
+.dropdown-profile-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.dropdown-user-info .user-name {
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+.dropdown-user-info .user-detail {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin: 0;
+}
+
+.dropdown-divider {
+  border: none;
+  border-top: 1px solid #e9ecef;
+  margin: 12px 0;
+}
+
+.dropdown-link {
+  display: block;
+  padding: 10px 12px;
+  text-decoration: none;
+  color: #495057;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+.logout-link {
+  font-family: "Inter", sans-serif;
+  display: flex;
+  padding: 10px 12px;
+  width: 100%;
+  text-decoration: none;
+  color: #495057;
+  background: #ffffff;
+  font-weight: 500;
+  font-size: 1em;
+  border-radius: 8px;
+  border: none;
+  transition: background-color 0.2s ease;
+
+}
+
+.logout-link:hover,
+.dropdown-link:hover {
+  background-color: #f8f9fa;
+  color: #333;
+}

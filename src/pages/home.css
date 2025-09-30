@@ -1,0 +1,240 @@
+.home-container {
+
+  font-family: var(--font-family-Font-2, Inter);
+  
+  
+}
+.title {
+  text-align: start;
+  padding: 20px 20px;
+  color: #e63946;
+  
+}
+.card {
+  background-color: white;
+  margin: 0 auto;
+  border-radius: 20px;
+  width: 77vw;
+  height: 70vh;
+  text-align: center;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  height: 90px;
+  border-radius: 20px 20px 0px 0px;
+  padding: 0px 25px;
+  background-color: #e63946;
+  color: white;
+  font-size: 21px;
+  font-weight: 500;
+  text-align: start;
+  align-items: center;
+}
+.head-time {
+  position: relative;
+  width: 120px; 
+  height: 50px;
+  border-radius: 20px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: rgba(230, 57, 71, 0.66);
+  box-shadow: 2px 2px 2px 0px rgba(0, 0, 0, 0.2),
+    inset 2px 2px 2px 0 rgba(255, 255, 255, 0.2),
+    inset -1px -2px 0px 0 rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+}
+.status{
+  width: 180px;
+  padding: 30px;
+
+}
+.status p{
+  padding: 10px;
+  border-radius: 50px;
+  font-weight: 500;
+}
+
+/* Shine Effect */
+.head-time::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.6) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-20deg);
+  animation: shine 3s infinite;
+  animation-delay: 1.5s;
+}
+
+@keyframes shine {
+  0% {
+    left: -75%;
+  }
+  50% {
+    left: 125%;
+  }
+  100% {
+    left: 125%;
+  }
+}
+
+/* ---------------------- */
+/* ✅ RESPONSIVE STYLES   */
+/* ---------------------- */
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .head-time {
+    width: 100px;
+    height: 45px;
+    border-radius: 16px;
+  }
+}
+
+/* Mobiles */
+@media (max-width: 600px) {
+  .head-time {
+    width: 80px;
+    height: 38px;
+    border-radius: 14px;
+    font-size: 12px; /* if you show text inside */
+  }
+}
+
+/* Status */
+
+
+.date p {
+  color: #555;
+  font-weight: 400;
+  padding-bottom: 5px;
+}
+.date span {
+  font-weight: 600;
+}
+.date {
+  display: flex;
+  justify-content: space-between;
+  padding: 0px 40px;
+  font-size: 14px;
+}
+.progress {
+  padding: 40px 40px 0px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+  color: #e63946;
+}
+.progress-bar {
+  width: 93%;
+  height: 15px;
+  background: linear-gradient(to right, #e63946 50%, #ddd 50%);
+  border-radius: 50px;
+  margin: auto;
+  margin-top: 15px;
+}
+.courses-details {
+  padding: 50px 100px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.icons {
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  background-color: #e63946;
+  height: 90px;
+  width: 90px;
+  border-radius: 100px;
+  margin-bottom: 10px;
+}
+.items {
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
+.arrows {
+  font-size: 25px;
+  color: #e63946;
+  margin-top: 30px;
+}
+.arrow-empty {
+  height: 40px;
+}
+
+/* ===== RESPONSIVE BREAKPOINTS ===== */
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .card {
+    width: 95%;
+    min-height: auto;
+  }
+  .courses-details {
+    display: flex;
+    gap: 15px;
+    padding: 20px;
+  }
+  .icons {
+    height: 60px;
+    width: 60px;
+  }
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+/* Mobile */
+
+  @media (max-width: 768px) {
+  .card {
+    width: 95%;
+    height: auto;   
+    min-height: auto;
+  }
+
+  .card-head {
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    text-align: center;
+    padding: 10px;
+    gap: 8px;
+    height: auto;
+  }
+  .courses-details {
+    display: flex;
+    flex-direction: column;  
+    align-items: center;    
+    gap: 20px;       
+    padding: 20px;       
+  }
+  .arrows {
+    display: none; 
+  }
+  .progress {
+    font-size: 12px;
+  }
+  .progress-bar {
+    height: 10px;
+  }
+  .icons {
+    margin: 0 auto 10px auto;
+
+  }
+}

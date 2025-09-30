@@ -1,0 +1,120 @@
+/* Common Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+/* Layout */
+.layout {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background-color: #f5f4f4;
+  overflow: hidden;
+}
+
+/* Sidebar */
+.leftside {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 240px;
+  background-color: #fff;
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  transition: left 0.3s ease;
+  z-index: 101;
+}
+
+/* Right Side */
+.rightside {
+  margin-left: 240px;
+  display: flex;
+  flex-direction: column;
+  width: calc(100% - 240px);
+  height: 100vh;
+  transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
+
+
+/* Hamburger Button */
+.hamburger {
+  display: none; /* default hide */
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 12px; /* space between logo/title */
+}
+
+/* Page Content */
+.app-content {
+
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+
+}
+
+/* ==================== Responsive ==================== */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .leftside {
+    width: 200px;
+  }
+  .rightside {
+    margin-left: 200px;
+    width: calc(100% - 200px);
+  }
+  .app-content {
+    padding: 15px;
+  }
+}
+
+/* Mobile (<768px) */
+@media (max-width: 768px) {
+  .leftside {
+    left: -240px; /* hide sidebar */
+    width: 240px;
+  
+  }
+
+  .leftside.open {
+    left: 0; /* slide in */
+  }
+
+  .overlay {
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 90;
+  }
+
+  .rightside {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .hamburger {
+    display: block; /* only mobile la show */
+  }
+
+  .app-content {
+    padding: 12px;
+  }
+}

@@ -1,0 +1,349 @@
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-image: url("../assets/loginimage.jpg");
+  background-size: cover;
+  background-position: center;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.login-card {
+  background-color: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 15px;
+  padding: 40px 50px;
+  width: 100%;
+  max-width: 450px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.login-logo img {
+  max-height: 70px;
+  margin-bottom: 25px;
+}
+
+.tab-switcher {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 30px;
+}
+
+.tab-button {
+  background: none;
+  border: none;
+  padding: 15px 20px;
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #ffffff;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.tab-button.active {
+  color: #fa0202;
+}
+
+.tab-button.active::after {
+  content: "";
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #e53935;
+  animation: slideIn 0.3s forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.login-form .input-group {
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.login-form label {
+  display: block;
+  font-size: 0.9rem;
+  color: #ffffff;
+  margin-bottom: 8px;
+  font-weight: 400;
+}
+
+.mobile-input-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mobile-input-container .country-code {
+  display: flex;
+  align-items: center;
+  padding: 12px 15px;
+  font-size: 1rem;
+  color: #333;
+  background-color: transparent;
+  border-right: 1px solid #ddd;
+}
+
+.mobile-input-container .flag-icon {
+  width: 24px;
+  margin-right: 8px;
+  border-radius: 3px;
+}
+
+.mobile-input-container input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  padding: 12px 15px;
+  font-size: 1rem;
+  background-color: transparent;
+}
+
+.login-form input[type="email"] {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: #f9f9f9;
+  box-sizing: border-box;
+}
+
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: auto;
+}
+
+.otp-button,
+.clear-button,
+.resend-button {
+  font-family: "Inter", sans-serif;
+  flex: 1;
+  padding: 14px 5px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background-color: #e53935;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3);
+}
+
+.resend-link {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  margin-top: 15px;
+  display: inline-block;
+  font-size: 0.9rem;
+}
+
+.resend-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+.otp-button:disabled {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.otp-button:disabled:hover {
+  background-color: #ccc;
+  transform: none;
+  box-shadow: none;
+}
+
+.clear-button:hover,
+.otp-button:hover {
+  background-color: #d32f2f;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(229, 57, 53, 0.4);
+}
+
+.otp-verification-view {
+  animation: fadeIn 0.5s;
+}
+
+.otp-verification-view h2 {
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.otp-verification-view p {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 30px;
+}
+
+.otp-input-container {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.otp-input {
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  color: #666;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.otp-input:focus {
+  border-color: #fff;
+  box-shadow: 0 0 0 3px #e53835;
+
+}
+
+/* --- Spinner --- */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.privacy-link {
+  display: block;
+  margin-top: 30px;
+  font-size: 0.9rem;
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+@media (max-width: 500px) {
+  .login-card {
+    padding: 30px 20px;
+    margin: 0 10px;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.policy-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 40px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.policy-header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 30px;
+}
+
+.back-icon-link {
+  position: absolute;
+  left: 0;
+  color: #555;
+  transition: color 0.2s ease;
+}
+
+.back-icon-link:hover {
+  color: #000;
+}
+
+.policy-logo {
+  max-height: 80px;
+}
+
+.policy-content {
+  text-align: left;
+  font-family: "Inter", sans-serif;
+}
+
+.policy-content h2 {
+  font-size: 1.5rem;
+  color: #e63946;
+  margin-top: 30px;
+  margin-bottom: 15px;
+}
+
+.policy-content p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+.policy-divider {
+  border: none;
+  border-top: 1px solid #e9ecef;
+  margin: 30px 0;
+}

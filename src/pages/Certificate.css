@@ -1,0 +1,207 @@
+/* ===================
+   General Styles
+   =================== */
+body {
+  font-family: "Inter", sans-serif;
+}
+
+.main-certificates {
+  padding: 30px;
+}
+.certificates-container {
+  gap: 40px;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 40px;
+
+  font-family: Arial, sans-serif;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.certificates-header {
+  text-align: center;
+}
+
+.certificates-header h1 {
+  color: #e63946;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin: 0;
+}
+
+.certificates-header p {
+  color: #666;
+  padding-top: 5px;
+}
+
+/* ===================
+   Summary Cards Section
+   =================== */
+.summary-cards {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.summary-card {
+  flex: 1;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+  justify-content: space-between;
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.summary-card h2 {
+  padding-bottom: 10px;
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+.summary-card span {
+  font-size: 1rem;
+  font-weight: 550;
+  color: #00000084;
+}
+
+.card-icon {
+  font-size: 2em;
+  color: #e63946;
+  /* Added a transition for the icon color too! */
+  transition: color 0.3s ease;
+}
+
+/* Make the icon a different color on hover for extra effect */
+.summary-card:hover .card-icon {
+  color: #ff5555; /* A slightly brighter red */
+}
+
+/* ===================
+   Certificates List Section
+   =================== */
+
+.certificate-item {
+  display: flex;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  align-items: center;
+  gap: 20px;
+}
+
+.certificate-image {
+  width: 120px;
+  height: 90px;
+  background-color: #f0f2f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  object-fit: cover;
+  cursor: pointer;
+
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.certificate-image:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Adds a subtle shadow */
+}
+
+.certificate-details {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 1;
+}
+
+.certificate-details h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.certificate-details p {
+  padding: 5px 0 10px;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.dates {
+  font-size: 0.8rem;
+  color: #888;
+}
+.dates strong {
+  color: #333;
+  font-weight: 600;
+}
+
+.dates span:first-child {
+  padding-right: 15px;
+}
+
+.download-button-container {
+  display: flex;
+  align-items: center;
+}
+
+.download-button {
+  background-color: #e63946;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: #c82333;
+}
+
+/* ===================
+   Responsive Styles
+   =================== */
+@media (max-width: 768px) {
+  .summary-cards {
+    flex-direction: column;
+  }
+
+  .certificate-item {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .certificate-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .download-button-container {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .download-button {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

@@ -1,0 +1,241 @@
+.main-container {
+  padding: 24px;
+  background-color: #f5f6fa;
+  margin: auto;
+}
+
+.content {
+  /* max-width: 600px; */
+  margin: 0 auto;
+}
+
+.back-link {
+  gap: 10px;
+  align-items: center;
+  display: flex;
+  justify-items: start;
+  color: #e63946;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Course card */
+.course-card {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.course-header {
+
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  width: 100%;
+  background: none;
+  border: none;
+  outline: none;
+}
+
+.course-header span:last-child {
+  font-size: 14px;
+}
+
+/* Expandable content */
+
+.course-content {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 0;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: all 0.4s ease;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  height: 30vh;
+}
+.course-title {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+ 
+}
+
+.course-content.open {
+  padding-top: 16px;
+  max-height: 200px;
+  opacity: 1;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.ebook-btn {
+  color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  height: 120px;
+  width: 120px;
+  transition: background-color 0.3s, transform 0.3s;
+  background: #e63947d2;
+} /* --- Base style for the chevron icon --- */
+.chevron {
+  font-size: 1.5rem;
+  color: #555;
+
+  transition: transform 0.3s ease-in-out;
+}
+
+.chevron.open {
+  transform: rotate(180deg);
+}
+
+.ebook-btn:hover {
+  background: #e63947b6;
+  transform: translateY(-2px);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  font-family: "Inter", sans-serif;
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  width: 500px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.modal-body p {
+  line-height: 1.6;
+  color: #555;
+}
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.content-body {
+  gap: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 10px;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+.content-body button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 15px;
+  border-radius: 10px;
+  color: #651616;
+  background: #fcdcdc;
+  border: 1px solid #f7bbbb;
+  cursor: pointer;
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.content-body button:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 6px 12px rgba(101, 22, 22, 0.3);
+}
+
+.content-body button:active {
+  transform: translateY(1px);
+
+  box-shadow: inset 0 3px 6px rgba(101, 22, 22, 0.4);
+}
+
+.close-button {
+  background: #f0f0f0;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #888;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s, color 0.2s;
+}
+.close-button:hover {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
