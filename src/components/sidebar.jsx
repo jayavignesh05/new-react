@@ -38,7 +38,7 @@ function Lsidebar({ onLinkClick }) {
       {
          token: token,
         source: "master_app_modules",
-        master_app_package_name: "dev.lms.dreambigportal.com",
+        master_app_package_name: "lms.caddcentre.com",
       }
     );
 

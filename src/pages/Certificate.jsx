@@ -18,7 +18,7 @@ function Certificates() {
   const completdate = location.state?.end_date;
 
   function certificateDownload(token, unique_id) {
-    const url = `https://dreambigportal.com/public/api/certificate_download.php?JEcYWcmNeh=${token}&user_course_id=${unique_id}`;
+    const url = `https://dev.dreambigportal.com/public/api/certificate_download.php?JEcYWcmNeh=${token}&user_course_id=${unique_id}`;
     const ur = window.open(url, "_blank");
     return ur;
   }
