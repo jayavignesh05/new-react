@@ -48,7 +48,7 @@ function Login() {
     setIsLoading(true);
 
     const response = await axios.post(
-      "https://dreambigportal.com/public/api/otp.php",
+      "https://dev.dreambigportal.com/public/api/otp.php",
       {
         user_id: mobileNo ? mobileNo : emailId,
         package_name: "lms.caddcentre.com",
@@ -117,7 +117,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "https://api-v1.dreambigportal.in/api/login",
+        "https://dev.api-v1.dreambigportal.in/api/login",
         {
           source: "login",
           user_id: mobileNo ? mobileNo : emailId,

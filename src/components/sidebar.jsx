@@ -12,7 +12,7 @@ import { BsSuitcaseLg } from "react-icons/bs";
 import { useLocation } from "react-router-dom";
 
 const getIcons = (name) => {
-  if (name === "My Courses") {
+  if (name === "Dashboard") {
     return <VscHome size={24} />;
   } else if (name === "My Certificates") {
     return <LuGraduationCap size={24} />;
@@ -36,7 +36,7 @@ function Lsidebar({ onLinkClick }) {
     const response = await axios.post(
       "https://dev.api-v1.dreambigportal.in/api/current_app_version",
       {
-         token: token,
+        token: token,
         source: "master_app_modules",
         master_app_package_name: "lms.caddcentre.com",
       }
@@ -49,8 +49,6 @@ function Lsidebar({ onLinkClick }) {
     apiCall();
   }, []);
 
-  
-
   return (
     <div>
       <div className="top-left">
@@ -59,23 +57,34 @@ function Lsidebar({ onLinkClick }) {
       </div>
       <div className="bottom-left">
         <ul>
-          {appVersion.filter((item)=>item.menu_module_name.toLowerCase() !== 'jobs').map((item, index) => (
-            <li key={index}>
-              <NavLink
-                className="sidebar-link"
-                style={
-                  location.pathname === `/${item.route}`|| location.pathname ==="/" && item.route ==="dashboard"
-                    ? { fontWeight: "500", background: "#ff000079",color:"white" }
-                    : {}
-                }
-                to={`/${item.route}`}
-                onClick={onLinkClick}
-              >
-                {getIcons(item.menu_module_name)}
-                {item.menu_module_name}
-              </NavLink>
-            </li>
-          ))}
+          {appVersion
+            .filter(
+              (item) =>
+                item.menu_module_name.toLowerCase() !== "jobs" &&
+                item.menu_module_name.toLowerCase() !== "my courses"
+            )
+            .map((item, index) => (
+              <li key={index}>
+                <NavLink
+                  className="sidebar-link"
+                  style={
+                    location.pathname === `/${item.route}` ||
+                    (location.pathname === "/" && item.route === "dashboard")
+                      ? {
+                          fontWeight: "500",
+                          background: "#ff000079",
+                          color: "white",
+                        }
+                      : {}
+                  }
+                  to={`/${item.route}`}
+                  onClick={onLinkClick}
+                >
+                  {getIcons(item.menu_module_name)}
+                  {item.menu_module_name}
+                </NavLink>
+              </li>
+            ))}
         </ul>
       </div>
     </div>
