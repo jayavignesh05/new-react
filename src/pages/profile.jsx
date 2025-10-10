@@ -9,7 +9,7 @@ import {
 } from "react-icons/md";
 import { IoCallOutline } from "react-icons/io5";
 import { PiSuitcaseSimple, PiGraduationCapLight } from "react-icons/pi";
-import { ImSpinner2 } from "react-icons/im"; // ADDED: Import the spinner icon
+import { ImSpinner2 } from "react-icons/im";
 import "./Profile.css";
 import Loading from "../components/loading";
 import Snackbar from "../components/snackbar";
@@ -17,7 +17,64 @@ import axios from "axios";
 import LinearProgress from "@mui/material/LinearProgress";
 
 // ===================================================================
-// 1. SECTION COMPONENTS
+// BUTTON COMPONENT (Using Pure CSS for slide + gooey)
+// ===================================================================
+const SlideButtonGroup = ({
+  isEditing,
+  isSaving,
+  onEditClick,
+  onCancelClick,
+}) => {
+  const containerClasses = `slide-button-group ${
+    isEditing ? "is-editing" : ""
+  }`;
+
+  return (
+    <div className={containerClasses}>
+      <button
+        type="submit"
+        className="slide-btn slide-save-btn"
+        disabled={isSaving}
+      >
+        {isSaving ? (
+          <>
+            <ImSpinner2 className="spinner" size={16} />
+            &nbsp;Saving...
+          </>
+        ) : (
+          <>
+            <LuSave size={16} />
+            &nbsp;Save
+          </>
+        )}
+      </button>
+
+      <button
+        type="button"
+        className={
+          isEditing ? "slide-btn slide-cancel-btn" : "slide-btn slide-edit-btn"
+        }
+        onClick={isEditing ? onCancelClick : onEditClick}
+        disabled={isSaving}
+      >
+        {isEditing ? (
+          <>
+            <LuX size={16} />
+            &nbsp;Cancel
+          </>
+        ) : (
+          <>
+            <LuPencil size={16} />
+            &nbsp;Edit
+          </>
+        )}
+      </button>
+    </div>
+  );
+};
+
+// ===================================================================
+// SECTION COMPONENTS
 // ===================================================================
 
 const PersonalDetails = ({
@@ -37,41 +94,12 @@ const PersonalDetails = ({
           <BsPersonVcard size={18} className="section-icon" />
           <h3>Personal Details</h3>
         </div>
-        <div className="button-group">
-          {isEditing ? (
-            <>
-              {/* CHANGED: Replaced "Saving..." text with a spinner icon */}
-              <button type="submit" className="save-btn" disabled={isSaving}>
-                {isSaving ? (
-                  <>
-                    <ImSpinner2 className="spinner" size={16} /> Saving...
-                  </>
-                ) : (
-                  <>
-                    <LuSave size={16} /> Save
-                  </>
-                )}
-              </button>
-              <button
-                type="button"
-                className="cancel-btn"
-                onClick={handleCancelClick}
-                disabled={isSaving}
-              >
-                <LuX size={16} />
-                Cancel
-              </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              className="edit-btn"
-              onClick={handleEditClick}
-            >
-              <LuPencil size={16} /> Edit
-            </button>
-          )}
-        </div>
+        <SlideButtonGroup
+          isEditing={isEditing}
+          isSaving={isSaving}
+          onEditClick={handleEditClick}
+          onCancelClick={handleCancelClick}
+        />
       </div>
       <div className="profile-form">
         <div className="forms">
@@ -154,42 +182,12 @@ const CommunicationDetails = ({
           <MdOutlineContactMail size={18} className="section-icon" />
           <h3>Communication Details</h3>
         </div>
-        <div className="button-group">
-          {isEditing ? (
-            <>
-               {/* CHANGED: Replaced "Saving..." text with a spinner icon */}
-              <button type="submit" className="save-btn" disabled={isSaving}>
-                {isSaving ? (
-                  <>
-                    <ImSpinner2 className="spinner" size={16} /> Saving...
-                  </>
-                ) : (
-                  <>
-                    <LuSave size={16} /> Save
-                  </>
-                )}
-              </button>
-              <button
-                type="button"
-                className="cancel-btn"
-                onClick={handleCancelClick}
-                disabled={isSaving}
-              >
-                <LuX size={16} />
-                Cancel
-              </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              className="edit-btn"
-              onClick={handleEditClick}
-            >
-              <LuPencil size={16} />
-              Edit
-            </button>
-          )}
-        </div>
+        <SlideButtonGroup
+          isEditing={isEditing}
+          isSaving={isSaving}
+          onEditClick={handleEditClick}
+          onCancelClick={handleCancelClick}
+        />
       </div>
       <div className="profile-form">
         <div className="forms">
@@ -347,41 +345,12 @@ const CareerDetails = ({
           <PiSuitcaseSimple size={18} className="section-icon" />
           <h3>Career Details</h3>
         </div>
-        <div className="button-group">
-          {isEditing ? (
-            <>
-              {/* CHANGED: Replaced "Saving..." text with a spinner icon */}
-              <button type="submit" className="save-btn" disabled={isSaving}>
-                {isSaving ? (
-                  <>
-                    <ImSpinner2 className="spinner" size={16} /> Saving...
-                  </>
-                ) : (
-                  <>
-                    <LuSave size={16} /> Save
-                  </>
-                )}
-              </button>
-              <button
-                type="button"
-                className="cancel-btn"
-                onClick={handleCancelClick}
-                disabled={isSaving}
-              >
-                <LuX size={16} />
-                Cancel
-              </button>
-            </>
-          ) : (
-            <button
-              type="button"
-              className="edit-btn"
-              onClick={handleEditClick}
-            >
-              <LuPencil size={16} /> Edit
-            </button>
-          )}
-        </div>
+        <SlideButtonGroup
+          isEditing={isEditing}
+          isSaving={isSaving}
+          onEditClick={handleEditClick}
+          onCancelClick={handleCancelClick}
+        />
       </div>
       <div className="profile-form">
         <div className="forms">
@@ -436,7 +405,7 @@ const CareerDetails = ({
 };
 
 // ===================================================================
-// 2. MAIN PROFILE COMPONENT (The container)
+// MAIN PROFILE COMPONENT
 // ===================================================================
 function Profile() {
   const [formData, setFormData] = useState({
@@ -458,13 +427,11 @@ function Profile() {
     institute: "",
     degree: "",
   });
-
   const [editingSections, setEditingSections] = useState({
     personal: false,
     communication: false,
     career: false,
   });
-
   const [originalFormData, setOriginalFormData] = useState(null);
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
@@ -594,12 +561,10 @@ function Profile() {
     const token = localStorage.getItem("authToken");
     const userId = localStorage.getItem("userId");
     localStorage.setItem("userName", formData.first_name);
-
     const selectedStatus = statusOptions.find(
       (option) => option.name === formData.status
     );
     const masterStatusId = selectedStatus ? selectedStatus.id : null;
-
     try {
       const saveResponse = await axios.post(
         "https://dev.api-v1.dreambigportal.in/api/my_profile",
@@ -658,6 +623,26 @@ function Profile() {
 
   return (
     <div className="profile-container">
+      {/* THIS SVG TAG IS REQUIRED FOR THE GOOEY FILTER TO WORK */}
+      <svg className="gooey-svg-filter">
+        <defs>
+          <filter id="gooey">
+            <feGaussianBlur
+              in="SourceGraphic"
+              stdDeviation="10"
+              result="blur"
+            />
+            <feColorMatrix
+              in="blur"
+              mode="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
+              result="gooey"
+            />
+            <feComposite in="SourceGraphic" in2="gooey" operator="atop" />
+          </filter>
+        </defs>
+      </svg>
+
       <div className="profile-header">
         <div className="profile-avatar">
           <div className="avatar-wrapper">

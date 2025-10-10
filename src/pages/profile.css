@@ -166,7 +166,7 @@ body {
 
 .profile-form-content {
   box-shadow: #0000001a 0px 2px 8px 0px;
-  background-color: rgba(46, 152, 232, 0.459);
+  background-color: rgba(46, 167, 232, 0.238);
   border-radius: 30px;
   padding: 20px;
 }
@@ -182,7 +182,7 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 15px 20px 10px 20px;
+  padding: 16px 20px 10px 20px;
   background-color: var(--color-surface-light);
   border-radius: 20px 20px 0px 0px;
   
@@ -436,4 +436,91 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
   .edit-btn, .save-btn, .cancel-btn {
       margin-bottom: 0;
   }
+}/* =============================================================== */
+/* FINAL CSS (v3) - With Consistent Button Sizes */
+/* =============================================================== */
+
+/* This hidden SVG element defines the gooey filter */
+.gooey-svg-filter {
+  position: absolute;
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+/* Wrapper for the button group */
+.slide-button-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 15px; /* This ensures spacing is the same */
+  width: 220px;
+  
+  /* This line applies the gooey effect to everything inside */
+  filter: url(#gooey); 
+}
+
+/* Base styles for all buttons in this group */
+.slide-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px ;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  border: none;
+  color: white;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.slide-edit-btn,
+.slide-cancel-btn {
+  background-color: #007bff;
+  min-width: 100px; /* Edit/Cancel button width */
+}
+.slide-edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.slide-cancel-btn {
+  background-color: #6c757d;
+}
+.slide-cancel-btn:hover {
+  background-color: #5a6268;
+}
+
+.slide-save-btn {
+  background-color: #28a745;
+  min-width: 100px; /* <-- THIS IS THE FIX: Makes Save button the same width */
+  
+  /* Animation properties */
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: right;
+  pointer-events: none;
+  transition: transform 0.35s ease, opacity 0.2s ease;
+}
+.slide-save-btn:hover {
+  background-color: #218838;
+}
+
+/* When the group is in "editing" mode, the save button appears */
+.slide-button-group.is-editing .slide-save-btn {
+  opacity: 1;
+  transform: scaleX(1);
+  pointer-events: auto;
+}
+
+/* Spinner animation (no change) */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.spinner {
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
 }
