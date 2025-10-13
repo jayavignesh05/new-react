@@ -12,7 +12,7 @@ import Deliverable from "../pages/deliverable";
 import Login from "../pages/login";
 import About from "../pages/privacy";
 import ProtectedRoutes from "./proctedrouter"; 
-
+import { ProfileProvider } from '../components/utils/ProfileContext';
 
 export default function MyApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -46,6 +46,7 @@ export default function MyApp() {
 
   return (
     <> 
+        <ProfileProvider>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/privacy" element={<About />} />
@@ -78,6 +79,7 @@ export default function MyApp() {
           </Route>
         </Route>
       </Routes>
+        </ProfileProvider>
 
      
     

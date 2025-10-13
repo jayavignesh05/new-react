@@ -1,62 +1,69 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./header.css";
-import axios from "axios";
-import { useEffect, useState } from "react";
+// We must use the ProfileContext to get the progress value and picture
+import { useProfile } from "../components/utils/ProfileContext";
+import { CircularProgress, Box } from "@mui/material";
 
 function Header() {
   const navigate = useNavigate();
-  const userName = localStorage.getItem("userName");
-  const usernumber=localStorage.getItem("contact_no")
-  const handleLogut = () => {
+
+  // Get ALL data from the context. This replaces any local apiCall()
+  const { formData, profilePicture, progressValue } = useProfile();
+
+  const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
   };
-  const [profile, setprofile] = useState([]);
 
-  async function apiCall() {
-    const token = localStorage.getItem("authToken");
-    const userId = localStorage.getItem("userId");
-
-    const profileResponse = await axios.post(
-      "https://dev.api-v1.dreambigportal.in/api/my_profile2",
-      {
-        required: "my_profile_picture",
-        token: token,
-        user_id: Number(userId),
-      }
-    );
-    setprofile(profileResponse.data.data.picture);
-  }
-  useEffect(() => {
-    apiCall();
-  }, []);
-
-  
+  const userName = formData?.first_name || "Guest";
+  const userNumber = formData?.contact_no || "";
 
   return (
-    <div>
+    <div className="header-root">
       <div className="profile-icon">
-        <p>{userName || "Guest User"}</p>
-        <img src={profile} alt="profile" className="header-profile-img" />
+        {/* We keep the username next to the avatar */}
+        <p className="header-user-name">{userName}</p>
+
+        {/* This is your new structure, now with correct data and classes */}
+        <div className="circular-progress-container">
+          <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+            {/* Gray background track */}
+            <CircularProgress 
+              variant="determinate" 
+              value={100} 
+              size={50} 
+              thickness={3} 
+              sx={{ color: '#e0e0e0' }}
+            />
+            {/* Green progress bar */}
+            <CircularProgress 
+              variant="determinate" 
+              value={progressValue || 0} 
+              size={50} 
+              thickness={3} 
+              sx={{ color: '#4CAF50', position: 'absolute', left: 0 }}
+            />
+            {/* Box to center the profile image */}
+            <Box sx={{ top: 0, left: 0, bottom: 0, right: 0, position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <img src={profilePicture} alt="profile" className="header-profile-img-inside" />
+            </Box>
+          </Box>
+          {/* The percentage label, styled to look like a badge */}
+          <span className="circular-progress-label">{`${Math.round(progressValue || 0)}%`}</span>
+        </div>
+        
+        {/* The dropdown menu remains the same */}
         <div className="profile-dropdown">
           <div className="dropdown-header">
-            <img src={profile} alt="profile" className="dropdown-profile-img" />
+            <img src={profilePicture} alt="profile" className="dropdown-profile-img" />
             <div className="dropdown-user-info">
-              <p className="user-name">{userName || "Guest User"}</p>
-              <p className="user-detail">
-                {usernumber}
-              </p>
+              <p className="user-name">{userName}</p>
+              <p className="user-detail">{userNumber}</p>
             </div>
           </div>
-
           <hr className="dropdown-divider" />
-
-          <Link to="/profile" className="dropdown-link">
-            Edit Profile
-          </Link>
-          <button onClick={handleLogut} className="logout-link">
-            logout
-          </button>
+          <Link to="/profile" className="dropdown-link">Edit Profile</Link>
+          <button onClick={handleLogout} className="logout-link">Logout</button>
         </div>
       </div>
     </div>

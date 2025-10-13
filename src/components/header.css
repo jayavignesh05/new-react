@@ -2,7 +2,7 @@
   height: 70px;
   background-color: #ffffff;
   padding: 10px 40px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   position: sticky;
   top: 0;
   color: #333;
@@ -17,9 +17,9 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 15px;
   font-family: "Inter", sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   cursor: pointer;
 }
 
@@ -27,34 +27,57 @@
   margin: 0;
 }
 
-.header-profile-img {
-  height: 36px;
-  width: 36px;
+.circular-progress-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  width: 50px;
+  height: 65px; 
+}
+
+.header-profile-img-inside {
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+}
+
+.circular-progress-label {
+  position: absolute;
+  bottom: 0;
+  background-color: white;
+  color: #333;
+  border: 2px solid #4CAF50;
+  border-radius: 8px;
+  padding: 1px 10px;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .profile-dropdown {
   position: absolute;
-  top: 130%;
-  right: 1%;
+  top: 120%;
+  right: 0;
   opacity: 0;
   visibility: hidden;
   transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  transition: all 0.3s ease;
   background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
   width: 300px;
   padding: 12px;
   text-align: left;
-  
+  z-index: 1000;
 }
 
 .profile-icon:hover .profile-dropdown {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
-  z-index: 1001;
 }
 
 .dropdown-header {
@@ -68,6 +91,7 @@
   width: 50px;
   height: 50px;
   border-radius: 50%;
+  object-fit: cover;
 }
 
 .dropdown-user-info .user-name {
@@ -88,29 +112,22 @@
   margin: 12px 0;
 }
 
-.dropdown-link {
-  display: block;
-  padding: 10px 12px;
-  text-decoration: none;
-  color: #495057;
-  font-weight: 500;
-  border-radius: 8px;
-  transition: background-color 0.2s ease;
-}
+.dropdown-link,
 .logout-link {
   font-family: "Inter", sans-serif;
-  display: flex;
-  padding: 10px 12px;
+  display: block;
   width: 100%;
+  text-align: left;
+  padding: 10px 12px;
   text-decoration: none;
   color: #495057;
-  background: #ffffff;
+  background: none;
   font-weight: 500;
   font-size: 1em;
   border-radius: 8px;
   border: none;
   transition: background-color 0.2s ease;
-
+  cursor: pointer;
 }
 
 .logout-link:hover,

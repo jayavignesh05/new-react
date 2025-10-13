@@ -177,7 +177,12 @@ body {
   align-items: center;
   border-radius: 20px;
 }
-
+.career-section-title {
+  text-align: start;
+  text-transform: uppercase;
+  padding: 20px 0px 10px 0px;
+  font-weight: 600;
+}
 .header-with-icon {
   display: flex;
   align-items: center;
@@ -185,8 +190,8 @@ body {
   padding: 16px 20px 10px 20px;
   background-color: var(--color-surface-light);
   border-radius: 20px 20px 0px 0px;
-  
-box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
+
+  box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
 }
 
 .profile-form-container h3 {
@@ -209,13 +214,13 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
   background-color: var(--color-surface-light);
   border-radius: 0px 20px 20px 20px;
   box-shadow: rgba(0, 0, 0, 0.15) -2.4px 2.4px 10px;
-
 }
 
 .forms {
   display: flex;
   gap: 15px;
-  flex-wrap: wrap;
+  height: 10vh;
+  width:fill-available;
   align-items: center;
 }
 
@@ -231,7 +236,8 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
   box-sizing: border-box;
   position: relative;
   background-color: var(--color-surface);
-  transition: border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+  transition: border-color 0.3s ease, background-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .input-with-icon svg {
@@ -277,7 +283,6 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
   resize: vertical;
 }
 
-
 /* ==========================================================================
    NEW & CORRECTED: STYLES FOR EDITABLE and READ-ONLY INPUTS
    ========================================================================== */
@@ -288,8 +293,8 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
 .input-with-icon:has(input[readOnly]),
 .input-with-icon:has(textarea[readOnly]),
 .input-with-icon:has(select:disabled) {
-  border-color: var(--color-border-readonly);
-  background-color: var(--color-bg-readonly);
+ border: 1px solid transparent; 
+background-color: var(--color-bg-readonly);
   cursor: default;
 }
 
@@ -305,18 +310,17 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
 .input-with-icon input[readOnly],
 .input-with-icon textarea[readOnly],
 .input-with-icon select:disabled {
-    cursor: default;
+  cursor: default;
 }
-
 
 /* ==========================================================================
    6. Buttons
    ========================================================================== */
 .button-group {
-    display: flex;
-    gap: 10px;
+  display: flex;
+  gap: 10px;
 }
-   
+
 .edit-btn,
 .save-btn,
 .cancel-btn {
@@ -336,7 +340,7 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
 .edit-btn:hover,
 .save-btn:hover,
 .cancel-btn:hover {
-    transform: translateY(-2px);
+  transform: translateY(-2px);
 }
 
 .edit-btn {
@@ -395,9 +399,9 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
   .profile-container {
     padding: 15px;
   }
-  
+
   .profile-header {
-      margin-bottom: 3rem;
+    margin-bottom: 3rem;
   }
 
   .profile-avatar {
@@ -430,13 +434,15 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
     align-items: stretch;
   }
   .button-group {
-      justify-content: space-around;
-      padding: 10px 0;
+    justify-content: space-around;
+    padding: 10px 0;
   }
-  .edit-btn, .save-btn, .cancel-btn {
-      margin-bottom: 0;
+  .edit-btn,
+  .save-btn,
+  .cancel-btn {
+    margin-bottom: 0;
   }
-}/* =============================================================== */
+} /* =============================================================== */
 /* FINAL CSS (v3) - With Consistent Button Sizes */
 /* =============================================================== */
 
@@ -455,9 +461,9 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
   justify-content: flex-end;
   gap: 15px; /* This ensures spacing is the same */
   width: 220px;
-  
+
   /* This line applies the gooey effect to everything inside */
-  filter: url(#gooey); 
+  filter: url(#gooey);
 }
 
 /* Base styles for all buttons in this group */
@@ -465,7 +471,7 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 8px ;
+  padding: 8px;
   border-radius: 5px;
   margin-bottom: 10px;
   border: none;
@@ -495,7 +501,7 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
 .slide-save-btn {
   background-color: #28a745;
   min-width: 100px; /* <-- THIS IS THE FIX: Makes Save button the same width */
-  
+
   /* Animation properties */
   opacity: 0;
   transform: scaleX(0);
@@ -516,11 +522,30 @@ box-shadow: rgba(0, 0, 0, 0.15) -2.4px -2.4px 3.2px;
 
 /* Spinner animation (no change) */
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .spinner {
   animation: spin 1s linear infinite;
   margin-right: 8px;
+}
+.input-field{
+  width: 100%;
+  height: 100%;
+  text-align: start;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+}
+.input-field label {
+  font-size: 0.9rem;
+  color: #555;
+  text-transform: capitalize;
+  font-weight: 600;
 }
