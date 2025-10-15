@@ -1,7 +1,7 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
-  RewriteBase /v7/
-  RewriteCond %{REQUEST_URI} ^/v7/api/ [NC]
+  RewriteBase /v8/
+  RewriteCond %{REQUEST_URI} ^/v8/api/ [NC]
   RewriteRule ^ - [L]
   RewriteCond %{REQUEST_FILENAME} -f [OR]
   RewriteCond %{REQUEST_FILENAME} -d

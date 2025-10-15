@@ -6,5 +6,5 @@ export default defineConfig({
   server:{
     port:4287
   },
-  base: '/v7/', 
+  base: '/v8/', 
 })

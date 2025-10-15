@@ -15,9 +15,7 @@ import Loading from "../components/loading";
 import Snackbar from "../components/snackbar";
 import axios from "axios";
 import LinearProgress from "@mui/material/LinearProgress";
-// IMPORT the context hook.
-import { useProfile } from "../components/utils/ProfileContext"; 
-
+import { useProfile } from "../components/utils/ProfileContext";
 
 // ===================================================================
 // BUTTON COMPONENT
@@ -399,6 +397,10 @@ const CareerDetails = ({
   isEditing,
   isSaving,
   statusOptions,
+  institutesList,
+  degreesList,
+  companiesList,
+  designationsList,
   handleChange,
   handleEditClick,
   handleCancelClick,
@@ -448,28 +450,36 @@ const CareerDetails = ({
             <label htmlFor="institute">Institute</label>
             <div className="input-with-icon">
               <LuBuilding2 />
-              <input
-                type="text"
+              <select
                 id="institute"
                 name="institute"
                 value={formData.institute || ""}
                 onChange={handleChange}
-                readOnly={!isEditing}
-              />
+                disabled={!isEditing}
+              >
+                <option value="" disabled>Select Institute</option>
+                {institutesList.map((inst) => (
+                  <option key={inst.id} value={inst.text}>{inst.text.trim()}</option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="input-field">
             <label htmlFor="degree">Degree</label>
             <div className="input-with-icon">
               <PiGraduationCapLight />
-              <input
-                type="text"
+              <select
                 id="degree"
                 name="degree"
                 value={formData.degree || ""}
                 onChange={handleChange}
-                readOnly={!isEditing}
-              />
+                disabled={!isEditing}
+              >
+                <option value="" disabled>Select Degree</option>
+                {degreesList.map((deg) => (
+                  <option key={deg.id} value={deg.text}>{deg.text.trim()}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
@@ -491,7 +501,7 @@ const CareerDetails = ({
           <div className="input-field">
             <label htmlFor="graduation_date">Graduation Date</label>
             <div className="input-with-icon">
-              <PiGraduationCapLight />
+              <BsCalendarDate />
               <input
                 type="date"
                 id="graduation_date"
@@ -508,29 +518,37 @@ const CareerDetails = ({
           <div className="input-field">
             <label htmlFor="company_name">Company Name</label>
             <div className="input-with-icon">
-              <PiGraduationCapLight />
-              <input
-                type="text"
+              <LuBuilding2 />
+              <select
                 id="company_name"
                 name="company_name"
                 value={formData.company_name || ""}
                 onChange={handleChange}
-                readOnly={!isEditing}
-              />
+                disabled={!isEditing}
+              >
+                <option value="" disabled>Select Company</option>
+                {companiesList.map((company) => (
+                  <option key={company.id} value={company.text}>{company.text.trim()}</option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="input-field">
             <label htmlFor="designation">Designation</label>
             <div className="input-with-icon">
-              <PiGraduationCapLight />
-              <input
-                type="text"
+              <PiSuitcaseSimple />
+              <select
                 id="designation"
                 name="designation"
                 value={formData.designation || ""}
                 onChange={handleChange}
-                readOnly={!isEditing}
-              />
+                disabled={!isEditing}
+              >
+                <option value="" disabled>Select Designation</option>
+                {designationsList.map((designation) => (
+                  <option key={designation.id} value={designation.text}>{designation.text.trim()}</option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
@@ -552,7 +570,7 @@ const CareerDetails = ({
           <div className="input-field">
             <label htmlFor="joining_date">Joining Date</label>
             <div className="input-with-icon">
-              <PiGraduationCapLight />
+              <BsCalendarDate />
               <input
                 type="date"
                 id="joining_date"
@@ -568,7 +586,7 @@ const CareerDetails = ({
           <div className="input-field">
             <label htmlFor="current_experience">Current Experience</label>
             <div className="input-with-icon">
-              <PiGraduationCapLight />
+              <PiSuitcaseSimple />
               <input
                 type="text"
                 id="current_experience"
@@ -582,7 +600,7 @@ const CareerDetails = ({
           <div className="input-field">
             <label htmlFor="total_experience">Total Experience</label>
             <div className="input-with-icon">
-              <PiGraduationCapLight />
+              <PiSuitcaseSimple />
               <input
                 type="text"
                 id="total_experience"
@@ -601,13 +619,10 @@ const CareerDetails = ({
 
 
 // ===================================================================
-// MAIN PROFILE COMPONENT (Refactored to use Context)
+// MAIN PROFILE COMPONENT
 // ===================================================================
 function Profile() {
-  // Get all shared data from the context.
   const {
-    formData: contextFormData,
-    setFormData: setContextFormData,
     profilePicture,
     progressValue,
     isLoading,
@@ -615,8 +630,7 @@ function Profile() {
     refreshProfileData,
   } = useProfile();
 
-  // Keep local state only for things this component controls (editing, saving, UI).
-  const [formData, setFormData] = useState(contextFormData); // Local copy for editing
+  const [formData, setFormData] = useState({});
   const [editingSections, setEditingSections] = useState({
     personal: false,
     communication: false,
@@ -624,161 +638,271 @@ function Profile() {
   });
   const [originalFormData, setOriginalFormData] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    type: "",
-  });
+  const [snackbar, setSnackbar] = useState({ open: false, message: "", type: "" });
 
-  // State for dropdown options (can still be fetched here as they are specific to the form)
+  // States for all dropdown options
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
   const [genderOptions, setGenderOptions] = useState([]);
+  const [institutesList, setInstitutesList] = useState([]);
+  const [degreesList, setDegreesList] = useState([]);
+  const [companiesList, setCompaniesList] = useState([]);
+  const [designationsList, setDesignationsList] = useState([]);
+  
   const dateInputRef = useRef(null);
 
-  // Sync local form data when the global context data loads or changes.
   useEffect(() => {
-    setFormData(contextFormData);
-  }, [contextFormData]);
-
-  // This useEffect can remain to load data specific to the form's dropdowns.
-  useEffect(() => {
-    async function loadDropdowns() {
+    async function loadInitialData() {
       const token = localStorage.getItem("authToken");
+      const userId = localStorage.getItem("userId");
       if (!token) return;
+
       try {
-        const [statusRes, genderRes, profileViewRes] = await Promise.all([
+        const [
+          profileViewRes,
+          careerHistoryRes,
+          statusRes,
+          genderRes,
+          institutesRes,
+          degreesRes,
+          companiesRes,
+          designationsRes,
+        ] = await Promise.all([
+          axios.post("https://dev.api-v1.dreambigportal.in/api/my_profile2", { token, user_id: Number(userId), required: "my_profile_view" }),
+          axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "get_profile", user_id: Number(userId), token }),
           axios.post("https://dev.api-v1.dreambigportal.in/api/master", { source: "get_master_user_current_status", token }),
           axios.post("https://dev.api-v1.dreambigportal.in/api/my_profile", { required: "gender_list", token }),
-          axios.post("https://dev.api-v1.dreambigportal.in/api/my_profile2", { token, user_id: Number(localStorage.getItem("userId")), required: "my_profile_view" }),
+          axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 1, org_type: 1, current_company_code: "91BS001", user_id: Number(userId), SearchParam: "", token }),
+          axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 3, current_company_code: "91BS001", user_id: Number(userId), SearchParam: "", token }),
+          axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 1, org_type: 2, current_company_code: "91BS001", user_id: Number(userId), SearchParam: "", token }),
+          axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 2, current_company_code: "91BS001", user_id: Number(userId), SearchParam: "", token }),
         ]);
-        setStatusOptions(statusRes.data.data || []);
-        setGenderOptions(genderRes.data.data || []);
-        setCountriesList(profileViewRes.data.countries_list || []);
-        setStatesList(profileViewRes.data.state_list || []);
+
+        const allStatusOptions = statusRes?.data?.data || [];
+        setCountriesList(profileViewRes?.data?.countries_list || []);
+        setStatesList(profileViewRes?.data?.state_list || []);
+        setStatusOptions(allStatusOptions);
+        setGenderOptions(genderRes?.data?.data || []);
+        setInstitutesList(institutesRes?.data?.data || []);
+        setDegreesList(degreesRes?.data?.data || []);
+
+        if (companiesRes?.data?.data) {
+          setCompaniesList(companiesRes.data.data.filter(c => c.text && c.text.trim() !== "-"));
+        }
+        if (designationsRes?.data?.data) {
+          setDesignationsList(designationsRes.data.data.filter(d => d.text && d.text.trim() !== "-"));
+        }
+
+        const profileData = profileViewRes?.data?.data;
+        const initialFormData = {};
+
+        if (profileData) {
+          initialFormData.first_name = profileData.first_name;
+          initialFormData.last_name = profileData.last_name;
+          // ... and so on for all personal/communication fields
+          initialFormData.master_gender_id = profileData.master_gender_id;
+          initialFormData.linkedin_url = profileData.linkedin_url;
+          if (profileData.date_of_birth) initialFormData.date_of_birth = profileData.date_of_birth.split('T')[0];
+          initialFormData.email_id = profileData.email_id;
+          initialFormData.contact_no = profileData.contact_no;
+          initialFormData.master_country = profileData.master_country_id;
+          initialFormData.master_state = profileData.master_state_id;
+          initialFormData.address = profileData.address;
+          initialFormData.street = profileData.street;
+          initialFormData.area = profileData.area;
+          initialFormData.city = profileData.city;
+          initialFormData.pincode = profileData.pincode;
+          initialFormData.door_no = profileData.door_no;
+        }
+
+        const careerData = careerHistoryRes?.data?.data;
+        if (careerData) {
+          if (careerData.user_academics && careerData.user_academics.length > 0) {
+            const sortedAcademics = [...careerData.user_academics].sort((a, b) => new Date(b.end_date) - new Date(a.end_date));
+            const latestAcademic = sortedAcademics[0];
+            
+            initialFormData.user_academic_id = latestAcademic.user_academic_id;
+            initialFormData.institute = latestAcademic.master_organization_name;
+            initialFormData.degree = latestAcademic.master_education_degree_name;
+            initialFormData.institute_location = latestAcademic.location;
+            if (latestAcademic.end_date) initialFormData.graduation_date = latestAcademic.end_date.split('T')[0];
+          }
+
+          if (careerData.user_professions && careerData.user_professions.length > 0) {
+            const sortedProfessions = [...careerData.user_professions].sort((a, b) => new Date(b.end_date) - new Date(a.end_date));
+            const latestProfession = sortedProfessions[0];
+
+            // UPDATED: Storing the ID for editing
+            initialFormData.user_profession_id = latestProfession.user_profession_id; 
+            initialFormData.company_name = latestProfession.master_organization_name;
+            initialFormData.designation = latestProfession.master_designation_name;
+            initialFormData.company_location = latestProfession.location;
+            if (latestProfession.start_date) initialFormData.joining_date = latestProfession.start_date.split('T')[0];
+          }
+
+          if(careerData.total_experience_in_months) {
+            const years = Math.floor(careerData.total_experience_in_months / 12);
+            const months = careerData.total_experience_in_months % 12;
+            initialFormData.total_experience = `${years} years, ${months} months`;
+          }
+        }
+        
+        setFormData(initialFormData);
+
       } catch (e) {
-        console.error("Failed to load dropdown options", e);
+        console.error("Failed to load initial data", e);
+        showSnackbar("Failed to load profile data.", "error");
       }
     }
-    loadDropdowns();
-  }, []);
+    loadInitialData();
+  }, [refreshProfileData]);
 
-  const showSnackbar = (message, type) =>
-    setSnackbar({ open: true, message, type });
-
-  const handleChange = (e) =>
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  const showSnackbar = (message, type) => setSnackbar({ open: true, message, type });
+  const handleChange = (e) => setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleEditClick = (e, section) => {
     e.preventDefault();
-    setOriginalFormData(formData);
+    setOriginalFormData({ ...formData });
     setEditingSections((prev) => ({ ...prev, [section]: true }));
   };
 
   const handleCancelClick = (e) => {
     e.preventDefault();
     setFormData(originalFormData);
-    setEditingSections({
-      personal: false,
-      communication: false,
-      career: false,
-    });
+    setEditingSections({ personal: false, communication: false, career: false });
     setOriginalFormData(null);
   };
 
-  const handleSave = async (e) => {
+  const handleSavePersonalAndCommunication = async (e) => {
     e.preventDefault();
     setIsSaving(true);
     const token = localStorage.getItem("authToken");
     const userId = localStorage.getItem("userId");
 
-    const selectedStatus = statusOptions.find(
-      (option) => option.name === formData.status
-    );
-    const masterStatusId = selectedStatus ? selectedStatus.id : null;
+    const payload = {
+      required: "my_profile_update",
+      token,
+      user_id: Number(userId),
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      master_gender_id: Number(formData.master_gender_id),
+      linkedin_url: formData.linkedin_url,
+      date_of_birth: formData.date_of_birth ? new Date(formData.date_of_birth).toISOString() : null,
+      email_id: formData.email_id,
+      country_code: "+91",
+      mobile_no: formData.contact_no,
+      master_state: formData.master_state,
+      master_country: formData.master_country,
+      address: formData.address,
+      area: formData.area,
+      door_no: formData.door_no,
+      street: formData.street,
+      city: formData.city,
+      pincode: formData.pincode,
+    };
 
     try {
-      const saveResponse = await axios.post(
-        "https://dev.api-v1.dreambigportal.in/api/my_profile",
-        {
-          required: "my_profile_update",
-          token: token,
-          user_id: Number(userId),
-          first_name: formData.first_name,
-          last_name: formData.last_name,
-          master_gender_id: Number(formData.master_gender_id),
-          linkedin_url: formData.linkedin_url,
-          email_id: formData.email_id,
-          country_code: "+91",
-          mobile_no: formData.contact_no,
-          master_state: formData.master_state,
-          master_country: formData.master_country,
-          date_of_birth: formData.date_of_birth
-            ? new Date(formData.date_of_birth).toISOString()
-            : null,
-          address: formData.address,
-          area: formData.area,
-          door_no: formData.door_no,
-          street: formData.street,
-          city: formData.city,
-          pincode: formData.pincode,
-          master_status_id: masterStatusId,
-          firm_name: formData.institute,
-          degree_name: formData.degree,
-        }
-      );
+      const saveResponse = await axios.post("https://dev.api-v1.dreambigportal.in/api/my_profile", payload);
       if (saveResponse.data.status === 200) {
         showSnackbar("Profile updated successfully!", "success");
-        setEditingSections({
-          personal: false,
-          communication: false,
-          career: false,
-        });
+        setEditingSections({ personal: false, communication: false, career: false });
         setOriginalFormData(null);
-        
-        // After successful save, update the context and tell it to refetch.
-        setContextFormData(formData); // Update context immediately for a fast UI response
-        refreshProfileData(); // Tell context to get the latest data from the server
+        refreshProfileData();
       } else {
-        showSnackbar(
-          "Failed to update profile: " + saveResponse.data.message,
-          "error"
-        );
+        showSnackbar(`Failed to update profile: ${saveResponse.data.message}`, "error");
       }
-    } catch {
-      showSnackbar(
-        "An error occurred while saving. Please try again.",
-        "error"
-      );
+    } catch (err) {
+      console.error("Save Error:", err);
+      showSnackbar("An error occurred while saving. Please try again.", "error");
     } finally {
       setIsSaving(false);
     }
   };
 
-  if (isLoading || !formData) return <Loading />;
+  // --- UPDATED: This function now saves BOTH academic and professional details ---
+  const handleSaveCareer = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
+    const token = localStorage.getItem("authToken");
+    const userId = Number(localStorage.getItem("userId"));
+
+    const payload = {
+        source: "set_profile",
+        user_id: userId,
+        token: token,
+    };
+
+    // Conditionally add academic data if present
+    if (formData.institute || formData.degree) {
+        const academicPayload = {
+            user_id: userId,
+            master_organization_id: formData.institute,
+            master_education_degree_id: formData.degree,
+            end_date: formData.graduation_date,
+            location: formData.institute_location,
+        };
+        if (formData.user_academic_id) {
+            academicPayload.user_academic_id = formData.user_academic_id;
+        }
+        payload.user_academics = [academicPayload];
+    }
+
+    // Conditionally add professional data if present
+    if (formData.company_name || formData.designation) {
+        const professionalPayload = {
+            user_id: userId,
+            master_organization_id: formData.company_name,
+            master_designation_id: formData.designation,
+            location: formData.company_location,
+            start_date: formData.joining_date,
+        };
+        if (formData.user_profession_id) {
+            professionalPayload.user_profession_id = formData.user_profession_id;
+        }
+        payload.user_professions = [professionalPayload];
+    }
+    
+    // Check if there is anything to save
+    if (!payload.user_academics && !payload.user_professions) {
+        showSnackbar("No career details to save.", "info");
+        setIsSaving(false);
+        return; 
+    }
+
+    try {
+        const saveResponse = await axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", payload);
+        if (saveResponse.data.status === 200) {
+            showSnackbar("Career details updated successfully!", "success");
+            setEditingSections({ personal: false, communication: false, career: false });
+            setOriginalFormData(null);
+            refreshProfileData();
+        } else {
+            showSnackbar(`Failed to update career details: ${saveResponse.data.message}`, "error");
+        }
+    } catch (err) {
+        console.error("Career Save Error:", err);
+        showSnackbar("An error occurred while saving career details. Please try again.", "error");
+    } finally {
+        setIsSaving(false);
+    }
+  };
+
+  if (isLoading || Object.keys(formData).length === 0) return <Loading />;
   if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="profile-container">
-      <svg className="gooey-svg-filter">
+      <svg className="gooey-svg-filter" style={{ display: 'none' }}>
         <defs>
           <filter id="gooey">
-            <feGaussianBlur
-              in="SourceGraphic"
-              stdDeviation="10"
-              result="blur"
-            />
-            <feColorMatrix
-              in="blur"
-              mode="matrix"
-              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7"
-              result="gooey"
-            />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="gooey" />
             <feComposite in="SourceGraphic" in2="gooey" operator="atop" />
           </filter>
         </defs>
       </svg>
+      
       <div className="profile-header">
         <div className="profile-avatar">
           <div className="avatar-wrapper">
@@ -786,34 +910,21 @@ function Profile() {
             <label htmlFor="profilePictureInput" className="edit-icon">
               <LuPencil size={14} />
             </label>
-            <input
-              type="file"
-              id="profilePictureInput"
-              style={{ display: "none" }}
-              accept="image/*"
-            />
+            <input type="file" id="profilePictureInput" style={{ display: "none" }} accept="image/*" />
           </div>
           <div className="profile-info">
-            <h2 className="profile-name">
-              {formData.first_name} {formData.last_name}
-            </h2>
+            <h2 className="profile-name">{`${formData.first_name || ''} ${formData.last_name || ''}`}</h2>
             <div className="progress-container">
               <div className="progress-bar-wrapper">
-                <LinearProgress
-                  variant="determinate"
-                  value={progressValue} /* Using value from context */
-                  className="custom-linear-progress"
-                />
+                <LinearProgress variant="determinate" value={progressValue} className="custom-linear-progress" />
               </div>
-              <span className="progress-percentage">
-                {" "}
-                {`${progressValue}%`}
-              </span>
+              <span className="progress-percentage">{`${progressValue}%`}</span>
             </div>
           </div>
         </div>
       </div>
-      <form className="profile-form-container" onSubmit={handleSave}>
+      
+      <form className="profile-form-container" onSubmit={handleSavePersonalAndCommunication}>
         <PersonalDetails
           formData={formData}
           isEditing={editingSections.personal}
@@ -834,16 +945,24 @@ function Profile() {
           handleEditClick={(e) => handleEditClick(e, "communication")}
           handleCancelClick={handleCancelClick}
         />
+      </form>
+      
+      <form className="profile-form-container" onSubmit={handleSaveCareer}>
         <CareerDetails
           formData={formData}
           isEditing={editingSections.career}
           isSaving={isSaving}
           statusOptions={statusOptions}
+          institutesList={institutesList}
+          degreesList={degreesList}
+          companiesList={companiesList}
+          designationsList={designationsList}
           handleChange={handleChange}
           handleEditClick={(e) => handleEditClick(e, "career")}
           handleCancelClick={handleCancelClick}
         />
       </form>
+
       {snackbar.open && (
         <Snackbar
           message={snackbar.message}

@@ -1,33 +1,60 @@
 import { Link, useNavigate } from "react-router-dom";
 import "./header.css";
-// We must use the ProfileContext to get the progress value and picture
-import { useProfile } from "../components/utils/ProfileContext";
+import { useProfile } from "../components/utils/ProfileContext.jsx";
 import { CircularProgress, Box } from "@mui/material";
 
 function Header() {
   const navigate = useNavigate();
 
-  // Get ALL data from the context. This replaces any local apiCall()
-  const { formData, profilePicture, progressValue } = useProfile();
+  // Get ALL data from the context, including isLoading and error
+  const { formData, profilePicture, progressValue, isLoading, error } = useProfile();
 
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
   };
 
+  // ==================================================================
+  // THE FIX: Check for loading and error states at the TOP of the component.
+  // This is called an "early return" pattern.
+  // ==================================================================
+
+  // If data is still being fetched, return a simple placeholder.
+  if (isLoading) {
+    return (
+      <div className="header-root">
+        <div className="profile-icon">
+          <p className="header-user-name">Loading...</p>
+          <div className="circular-progress-container" style={{ height: '65px' }}>
+            {/* You can show a spinner here if you want */}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // If there was an error, show an error message.
+  if (error) {
+    return (
+      <div className="header-root">
+        <div className="profile-icon">
+          <p className="header-user-name">Error</p>
+        </div>
+      </div>
+    );
+  }
+
+  // This code below will ONLY run if isLoading is false and there is no error.
   const userName = formData?.first_name || "Guest";
   const userNumber = formData?.contact_no || "";
 
   return (
     <div className="header-root">
       <div className="profile-icon">
-        {/* We keep the username next to the avatar */}
         <p className="header-user-name">{userName}</p>
 
-        {/* This is your new structure, now with correct data and classes */}
         <div className="circular-progress-container">
           <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-            {/* Gray background track */}
             <CircularProgress 
               variant="determinate" 
               value={100} 
@@ -35,7 +62,6 @@ function Header() {
               thickness={3} 
               sx={{ color: '#e0e0e0' }}
             />
-            {/* Green progress bar */}
             <CircularProgress 
               variant="determinate" 
               value={progressValue || 0} 
@@ -43,16 +69,13 @@ function Header() {
               thickness={3} 
               sx={{ color: '#4CAF50', position: 'absolute', left: 0 }}
             />
-            {/* Box to center the profile image */}
             <Box sx={{ top: 0, left: 0, bottom: 0, right: 0, position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <img src={profilePicture} alt="profile" className="header-profile-img-inside" />
             </Box>
           </Box>
-          {/* The percentage label, styled to look like a badge */}
           <span className="circular-progress-label">{`${Math.round(progressValue || 0)}%`}</span>
         </div>
         
-        {/* The dropdown menu remains the same */}
         <div className="profile-dropdown">
           <div className="dropdown-header">
             <img src={profilePicture} alt="profile" className="dropdown-profile-img" />
