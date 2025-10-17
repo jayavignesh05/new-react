@@ -62,7 +62,7 @@ body {
   border-top-left-radius: var(--border-radius-large);
   border-top-right-radius: var(--border-radius-large);
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  margin-bottom: 2rem;
+  margin-bottom:70px;
 }
 
 .profile-avatar {
@@ -161,7 +161,6 @@ body {
 .profile-form-container {
   display: flex;
   flex-direction: column;
-  padding-top: 50px;
   margin: 30px;
   gap: 30px;
 }
@@ -455,7 +454,26 @@ body {
   text-transform: capitalize;
   font-weight: 600;
 }
+.job-header{
+      display: flex;
+    justify-content: space-between;
+}
+.job-details{
+  display: flex;
+  justify-content: space-between;
+  color: #ff0000;
+  font-size: 16px;
+  font-weight: 500;
+  color: #6c757d;
+  
+}
+.professional-entry{
 
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 10px;
+}
 /* ============================================================
    9. Responsive Design
    ============================================================ */
@@ -656,4 +674,209 @@ height: 100%;
     font-size: 14px;
     padding: 8px;
   }
+}
+    /* <div className="forms">
+          <div className="input-field">
+            <label htmlFor="company_name">Company Name</label>
+            <div className="input-with-icon">
+              <LuBuilding2 />
+              <input
+                type="text"
+                id="company_name"
+                name="company_name"
+                list="companies-list"
+                value={formData.company_name || ""}
+                onChange={handleChange}
+                readOnly={!isEditing}
+                placeholder="Select or type a company"
+              />
+              <datalist id="companies-list">
+                {companiesList.map((company) => (
+                  <option key={company.id} value={company.text.trim()} />
+                ))}
+              </datalist>
+            </div>
+          </div>
+          <div className="input-field">
+            <label htmlFor="designation">Designation</label>
+            <div className="input-with-icon">
+              <PiSuitcaseSimple />
+              <input
+                type="text"
+                id="designation"
+                name="designation"
+                list="designations-list"
+                value={formData.designation || ""}
+                onChange={handleChange}
+                readOnly={!isEditing}
+                placeholder="Select or type a designation"
+              />
+              <datalist id="designations-list">
+                {designationsList.map((designation) => (
+                  <option
+                    key={designation.id}
+                    value={designation.text.trim()}
+                  />
+                ))}
+              </datalist>
+            </div>
+          </div>
+        </div>
+        <div className="forms">
+          <div className="input-field">
+            <label htmlFor="company_location">Company Location</label>
+            <div className="input-with-icon">
+              <MdOutlineLocationOn />
+              <input
+                type="text"
+                id="company_location"
+                name="company_location"
+                value={formData.company_location || ""}
+                onChange={handleChange}
+                readOnly={!isEditing}
+              />
+            </div>
+          </div>
+          <div className="input-field">
+            <label htmlFor="joining_date">Joining Date</label>
+            <div className="input-with-icon">
+              <BsCalendarDate />
+              <input
+                type="date"
+                id="joining_date"
+                name="joining_date"
+                value={formData.joining_date || ""}
+                onChange={handleChange}
+                readOnly={!isEditing}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="forms">
+          <div className="input-field">
+            <label htmlFor="current_experience">Current Experience</label>
+            <div className="input-with-icon">
+              <PiSuitcaseSimple />
+              <input
+                type="text"
+                id="current_experience"
+                name="current_experience"
+                value={formData.current_experience || ""}
+                onChange={handleChange}
+                readOnly={!isEditing}
+              />
+            </div>
+          </div>
+          <div className="input-field">
+            <label htmlFor="total_experience">Total Experience</label>
+            <div className="input-with-icon">
+              <PiSuitcaseSimple />
+              <input
+                type="text"
+                id="total_experience"
+                name="total_experience"
+                value={formData.total_experience || ""}
+                onChange={handleChange}
+                readOnly={!isEditing}
+              />
+            </div>
+          </div>
+        </div> */
+     /* CSS for the "Add New" button */
+.btn-add-new {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-add-new:hover {
+  background-color: #0056b3;
+}
+
+/* CSS for the Modal Overlay and Content */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.modal-close-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: #6c757d;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.modal-footer .btn-cancel,
+.modal-footer .btn-save {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.modal-footer .btn-cancel {
+  background-color: #f8f9fa;
+}
+
+.modal-footer .btn-save {
+  background-color: #28a745;
+  color: white;
+  border-color: #28a745;
+}
+
+.modal-footer .btn-save:disabled {
+  background-color: #a5d6a7;
+  cursor: not-allowed;
 }

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { GoPeople } from "react-icons/go";
 import { BsCalendarDate, BsPerson, BsPersonVcard } from "react-icons/bs";
 import { LuBuilding2, LuPencil, LuSave, LuX } from "react-icons/lu";
@@ -77,7 +77,6 @@ const SlideButtonGroup = ({
 // ===================================================================
 // SECTION COMPONENTS
 // ===================================================================
-
 const PersonalDetails = ({
   formData,
   isEditing,
@@ -232,7 +231,7 @@ const CommunicationDetails = ({
                 name="email_id"
                 value={formData.email_id || ""}
                 onChange={handleChange}
-                readOnly={!isEditing}
+                readOnly
               />
             </div>
           </div>
@@ -392,15 +391,11 @@ const CommunicationDetails = ({
   );
 };
 
-const CareerDetails = ({
+const CurrentStatusDetails = ({
   formData,
   isEditing,
   isSaving,
   statusOptions,
-  institutesList,
-  degreesList,
-  companiesList,
-  designationsList,
   handleChange,
   handleEditClick,
   handleCancelClick,
@@ -410,7 +405,7 @@ const CareerDetails = ({
       <div className="profile-form-header">
         <div className="header-with-icon">
           <PiSuitcaseSimple size={18} className="section-icon" />
-          <h3>Career Details</h3>
+          <h3>Current Status</h3>
         </div>
         <SlideButtonGroup
           isEditing={isEditing}
@@ -422,13 +417,15 @@ const CareerDetails = ({
       <div className="profile-form">
         <div className="forms">
           <div className="input-field">
-            <label htmlFor="status">Current Status</label>
+            <label htmlFor="master_user_current_status_id">
+              Your Current Status
+            </label>
             <div className="input-with-icon">
               <PiSuitcaseSimple />
               <select
-                id="status"
-                name="status"
-                value={formData.status || ""}
+                id="master_user_current_status_id"
+                name="master_user_current_status_id"
+                value={formData.master_user_current_status_id || ""}
                 onChange={handleChange}
                 disabled={!isEditing}
               >
@@ -436,7 +433,7 @@ const CareerDetails = ({
                   Select Your Current Status
                 </option>
                 {statusOptions.map((s) => (
-                  <option key={s.id} value={s.name}>
+                  <option key={s.id} value={s.id}>
                     {s.name}
                   </option>
                 ))}
@@ -444,42 +441,77 @@ const CareerDetails = ({
             </div>
           </div>
         </div>
-        <p className="career-section-title">education background</p>
+      </div>
+    </div>
+  );
+};
+
+const EducationDetails = ({
+  formData,
+  isEditing,
+  isSaving,
+  institutesList,
+  degreesList,
+  handleChange,
+  handleEditClick,
+  handleCancelClick,
+}) => {
+  return (
+    <div className="profile-form-content">
+      <div className="profile-form-header">
+        <div className="header-with-icon">
+          <PiGraduationCapLight size={18} className="section-icon" />
+          <h3>Education Background</h3>
+        </div>
+        <SlideButtonGroup
+          isEditing={isEditing}
+          isSaving={isSaving}
+          onEditClick={handleEditClick}
+          onCancelClick={handleCancelClick}
+        />
+      </div>
+      <div className="profile-form">
         <div className="forms">
           <div className="input-field">
             <label htmlFor="institute">Institute</label>
             <div className="input-with-icon">
               <LuBuilding2 />
-              <select
+              <input
+                type="text"
                 id="institute"
                 name="institute"
+                list="institutes-list"
                 value={formData.institute || ""}
                 onChange={handleChange}
-                disabled={!isEditing}
-              >
-                <option value="" disabled>Select Institute</option>
+                readOnly={!isEditing}
+                placeholder="Select or type an institute"
+              />
+              <datalist id="institutes-list">
                 {institutesList.map((inst) => (
-                  <option key={inst.id} value={inst.text}>{inst.text.trim()}</option>
+                  <option key={inst.id} value={inst.text.trim()} />
                 ))}
-              </select>
+              </datalist>
             </div>
           </div>
           <div className="input-field">
             <label htmlFor="degree">Degree</label>
             <div className="input-with-icon">
               <PiGraduationCapLight />
-              <select
+              <input
+                type="text"
                 id="degree"
                 name="degree"
+                list="degrees-list"
                 value={formData.degree || ""}
                 onChange={handleChange}
-                disabled={!isEditing}
-              >
-                <option value="" disabled>Select Degree</option>
+                readOnly={!isEditing}
+                placeholder="Select or type a degree"
+              />
+              <datalist id="degrees-list">
                 {degreesList.map((deg) => (
-                  <option key={deg.id} value={deg.text}>{deg.text.trim()}</option>
+                  <option key={deg.id} value={deg.text.trim()} />
                 ))}
-              </select>
+              </datalist>
             </div>
           </div>
         </div>
@@ -513,110 +545,276 @@ const CareerDetails = ({
             </div>
           </div>
         </div>
-        <p className="career-section-title">professional background</p>
-        <div className="forms">
-          <div className="input-field">
-            <label htmlFor="company_name">Company Name</label>
-            <div className="input-with-icon">
-              <LuBuilding2 />
-              <select
-                id="company_name"
-                name="company_name"
-                value={formData.company_name || ""}
-                onChange={handleChange}
-                disabled={!isEditing}
-              >
-                <option value="" disabled>Select Company</option>
-                {companiesList.map((company) => (
-                  <option key={company.id} value={company.text}>{company.text.trim()}</option>
-                ))}
-              </select>
+      </div>
+    </div>
+  );
+};
+
+const ProfessionalFormModal = ({
+  isOpen,
+  onClose,
+  onSave,
+  initialData,
+  companiesList,
+  designationsList,
+}) => {
+  const [formData, setFormData] = useState({});
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      if (initialData) {
+        setFormData({
+          master_organization_name: initialData.master_organization_name || "",
+          master_designation_name: initialData.master_designation_name || "",
+          location: initialData.location || "",
+          start_date: initialData.start_date
+            ? initialData.start_date.split("T")[0]
+            : "",
+          end_date: initialData.end_date
+            ? initialData.end_date.split("T")[0]
+            : "",
+        });
+      } else {
+        setFormData({
+          master_organization_name: "",
+          master_designation_name: "",
+          location: "",
+          start_date: "",
+          end_date: "",
+        });
+      }
+    }
+  }, [isOpen, initialData]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    await onSave(formData);
+    setIsSaving(false);
+  };
+
+  if (!isOpen) {
+    return null;
+  }
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <div className="modal-header">
+          <h3>
+            {initialData
+              ? "Edit Professional Detail"
+              : "Add Professional Detail"}
+          </h3>
+          <button onClick={onClose} className="modal-close-btn">
+            <LuX size={20} />
+          </button>
+        </div>
+        <div className="modal-body">
+          <div className="forms">
+            <div className="input-field">
+              <label htmlFor="master_organization_name">Company Name</label>
+              <div className="input-with-icon">
+                <LuBuilding2 />
+                <input
+                  type="text"
+                  id="master_organization_name"
+                  name="master_organization_name"
+                  list="companies-list"
+                  value={formData.master_organization_name || ""}
+                  onChange={handleChange}
+                  placeholder="Select or type a company"
+                />
+                <datalist id="companies-list">
+                  {companiesList.map((company) => (
+                    <option key={company.id} value={company.text.trim()} />
+                  ))}
+                </datalist>
+              </div>
+            </div>
+            <div className="input-field">
+              <label htmlFor="master_designation_name">Designation</label>
+              <div className="input-with-icon">
+                <PiSuitcaseSimple />
+                <input
+                  type="text"
+                  id="master_designation_name"
+                  name="master_designation_name"
+                  list="designations-list"
+                  value={formData.master_designation_name || ""}
+                  onChange={handleChange}
+                  placeholder="Select or type a designation"
+                />
+                <datalist id="designations-list">
+                  {designationsList.map((designation) => (
+                    <option
+                      key={designation.id}
+                      value={designation.text.trim()}
+                    />
+                  ))}
+                </datalist>
+              </div>
             </div>
           </div>
-          <div className="input-field">
-            <label htmlFor="designation">Designation</label>
-            <div className="input-with-icon">
-              <PiSuitcaseSimple />
-              <select
-                id="designation"
-                name="designation"
-                value={formData.designation || ""}
-                onChange={handleChange}
-                disabled={!isEditing}
-              >
-                <option value="" disabled>Select Designation</option>
-                {designationsList.map((designation) => (
-                  <option key={designation.id} value={designation.text}>{designation.text.trim()}</option>
-                ))}
-              </select>
+          <div className="forms">
+            <div className="input-field">
+              <label htmlFor="location">Company Location</label>
+              <div className="input-with-icon">
+                <MdOutlineLocationOn />
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  value={formData.location || ""}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+            <div className="input-field">
+              <label htmlFor="start_date">Joining Date</label>
+              <div className="input-with-icon">
+                <BsCalendarDate />
+                <input
+                  type="date"
+                  id="start_date"
+                  name="start_date"
+                  value={formData.start_date || ""}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="forms">
+            <div className="input-field">
+              <label htmlFor="end_date">
+                Relieving Date (leave empty if current)
+              </label>
+              <div className="input-with-icon">
+                <BsCalendarDate />
+                <input
+                  type="date"
+                  id="end_date"
+                  name="end_date"
+                  value={formData.end_date || ""}
+                  onChange={handleChange}
+                />
+              </div>
             </div>
           </div>
         </div>
-        <div className="forms">
-          <div className="input-field">
-            <label htmlFor="company_location">Company Location</label>
-            <div className="input-with-icon">
-              <MdOutlineLocationOn />
-              <input
-                type="text"
-                id="company_location"
-                name="company_location"
-                value={formData.company_location || ""}
-                onChange={handleChange}
-                readOnly={!isEditing}
-              />
-            </div>
-          </div>
-          <div className="input-field">
-            <label htmlFor="joining_date">Joining Date</label>
-            <div className="input-with-icon">
-              <BsCalendarDate />
-              <input
-                type="date"
-                id="joining_date"
-                name="joining_date"
-                value={formData.joining_date || ""}
-                onChange={handleChange}
-                readOnly={!isEditing}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="forms">
-          <div className="input-field">
-            <label htmlFor="current_experience">Current Experience</label>
-            <div className="input-with-icon">
-              <PiSuitcaseSimple />
-              <input
-                type="text"
-                id="current_experience"
-                name="current_experience"
-                value={formData.current_experience || ""}
-                onChange={handleChange}
-                readOnly={!isEditing}
-              />
-            </div>
-          </div>
-          <div className="input-field">
-            <label htmlFor="total_experience">Total Experience</label>
-            <div className="input-with-icon">
-              <PiSuitcaseSimple />
-              <input
-                type="text"
-                id="total_experience"
-                name="total_experience"
-                value={formData.total_experience || ""}
-                onChange={handleChange}
-                readOnly={!isEditing}
-              />
-            </div>
-          </div>
+        <div className="modal-footer">
+          <button onClick={onClose} className="btn-cancel" disabled={isSaving}>
+            Cancel
+          </button>
+          <button onClick={handleSave} className="btn-save" disabled={isSaving}>
+            {isSaving ? (
+              <>
+                <ImSpinner2 className="spinner" size={16} /> Saving...
+              </>
+            ) : (
+              "Save"
+            )}
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
+const ProfessionalDetails = ({ professionalHistory, onAdd, onEdit }) => {
+  const formatDateToYYYYMMDD = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  const calculateExperienceInMonths = (start, end) => {
+    const startDate = new Date(start);
+    const endDate = end ? new Date(end) : new Date();
+    let totalMonths = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+    totalMonths -= startDate.getMonth();
+    totalMonths += endDate.getMonth();
+    if (endDate.getDate() < startDate.getDate()) {
+      totalMonths--;
+    }
+    return totalMonths <= 0 ? 0 : totalMonths;
+  };
+
+  return (
+    <div className="profile-form-content">
+      <div className="profile-form-header">
+        <div className="header-with-icon">
+          <LuBuilding2 size={18} className="section-icon" />
+          <h3>Professional Background</h3>
+        </div>
+        <button type="button" onClick={onAdd} className="btn-add-new">
+          Add New
+        </button>
+      </div>
+      <div className="profile-form">
+        {professionalHistory.length > 0 ? (
+          professionalHistory.map((job, index) => {
+            const formattedStartDate = formatDateToYYYYMMDD(job.start_date);
+            const formattedEndDate = formatDateToYYYYMMDD(job.end_date);
+            const experienceInMonths = calculateExperienceInMonths(
+              job.start_date,
+              job.end_date
+            );
+
+            return (
+              <div key={job.user_profession_id} className="professional-entry">
+                <div className="job-header">
+                  <h4 className="job-title">
+                    {job.master_designation_name} -{" "}
+                    {job.master_organization_name}
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={() => onEdit(job)}
+                    className="edit-job-btn"
+                  >
+                    <LuPencil size={14} />
+                  </button>
+                </div>
+                <div className="job-details">
+                  {experienceInMonths > 0 && (
+                    <p className="Total-exp">
+                      Total Experience: {Math.floor(experienceInMonths / 12)}{" "}
+                      years, {experienceInMonths % 12} months
+                    </p>
+                  )}
+                  {formattedStartDate && (
+                    <p className="joining-date">
+                      Joining Date: {formattedStartDate}
+                    </p>
+                  )}
+                  {formattedEndDate && (
+                    <p className="end-date">
+                      Relieving Date: {formattedEndDate}
+                    </p>
+                  )}
+                </div>
+                {index < professionalHistory.length - 1 && (
+                  <hr className="entry-divider" />
+                )}
+              </div>
+            );
+          })
+        ) : (
+          <p>No professional background information available.</p>
+        )}
+      </div>
+    </div>
+  );
+};
 
 // ===================================================================
 // MAIN PROFILE COMPONENT
@@ -629,18 +827,22 @@ function Profile() {
     error,
     refreshProfileData,
   } = useProfile();
-
   const [formData, setFormData] = useState({});
   const [editingSections, setEditingSections] = useState({
     personal: false,
     communication: false,
-    career: false,
+    status: false,
+    education: false,
   });
   const [originalFormData, setOriginalFormData] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [snackbar, setSnackbar] = useState({ open: false, message: "", type: "" });
-
-  // States for all dropdown options
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    type: "",
+  });
+  const [isProfessionalModalOpen, setIsProfessionalModalOpen] = useState(false);
+  const [editingJob, setEditingJob] = useState(null);
   const [countriesList, setCountriesList] = useState([]);
   const [statesList, setStatesList] = useState([]);
   const [statusOptions, setStatusOptions] = useState([]);
@@ -649,242 +851,298 @@ function Profile() {
   const [degreesList, setDegreesList] = useState([]);
   const [companiesList, setCompaniesList] = useState([]);
   const [designationsList, setDesignationsList] = useState([]);
-  
+  const [professionalHistory, setProfessionalHistory] = useState([]);
   const dateInputRef = useRef(null);
 
-  useEffect(() => {
-    async function loadInitialData() {
-      const token = localStorage.getItem("authToken");
-      const userId = localStorage.getItem("userId");
-      if (!token) return;
+  const showSnackbar = useCallback((message, type) => {
+    setSnackbar({ open: true, message, type });
+  }, []);
 
-      try {
-        const [
-          profileViewRes,
-          careerHistoryRes,
-          statusRes,
-          genderRes,
-          institutesRes,
-          degreesRes,
-          companiesRes,
-          designationsRes,
-        ] = await Promise.all([
-          axios.post("https://dev.api-v1.dreambigportal.in/api/my_profile2", { token, user_id: Number(userId), required: "my_profile_view" }),
-          axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "get_profile", user_id: Number(userId), token }),
-          axios.post("https://dev.api-v1.dreambigportal.in/api/master", { source: "get_master_user_current_status", token }),
-          axios.post("https://dev.api-v1.dreambigportal.in/api/my_profile", { required: "gender_list", token }),
-          axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 1, org_type: 1, current_company_code: "91BS001", user_id: Number(userId), SearchParam: "", token }),
-          axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 3, current_company_code: "91BS001", user_id: Number(userId), SearchParam: "", token }),
-          axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 1, org_type: 2, current_company_code: "91BS001", user_id: Number(userId), SearchParam: "", token }),
-          axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 2, current_company_code: "91BS001", user_id: Number(userId), SearchParam: "", token }),
-        ]);
+  const fetchProfileData = useCallback(async () => {
+    const token = localStorage.getItem("authToken");
+    const userId = localStorage.getItem("userId");
+    if (!token) return;
+    try {
+      const [
+        profileViewRes,
+        careerHistoryRes,
+        statusRes,
+        genderRes,
+        institutesRes,
+        degreesRes,
+        companiesRes,
+        designationsRes,
+      ] = await Promise.all([
+        axios.post("https://dev.api-v1.dreambigportal.in/api/my_profile2", {
+          token,
+          user_id: Number(userId),
+          required: "my_profile_view",
+        }),
+        axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", {
+          source: "get_profile",
+          user_id: Number(userId),
+          token,
+        }),
+        axios.post("https://dev.api-v1.dreambigportal.in/api/master", {
+          source: "get_master_user_current_status",
+          token,
+        }),
+        axios.post("https://dev.api-v1.dreambigportal.in/api/my_profile", {
+          required: "gender_list",
+          token,
+        }),
+        axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", {
+          source: "load_career_data",
+          type: 1,
+          org_type: 1,
+          current_company_code: "91BS001",
+          user_id: Number(userId),
+          SearchParam: "",
+          token,
+        }),
+        axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", {
+          source: "load_career_data",
+          type: 3,
+          current_company_code: "91BS001",
+          user_id: Number(userId),
+          SearchParam: "",
+          token,
+        }),
+        axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", {
+          source: "load_career_data",
+          type: 1,
+          org_type: 2,
+          current_company_code: "91BS001",
+          user_id: Number(userId),
+          SearchParam: "",
+          token,
+        }),
+        axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", {
+          source: "load_career_data",
+          type: 2,
+          current_company_code: "91BS001",
+          user_id: Number(userId),
+          SearchParam: "",
+          token,
+        }),
+      ]);
 
-        const allStatusOptions = statusRes?.data?.data || [];
-        setCountriesList(profileViewRes?.data?.countries_list || []);
-        setStatesList(profileViewRes?.data?.state_list || []);
-        setStatusOptions(allStatusOptions);
-        setGenderOptions(genderRes?.data?.data || []);
-        setInstitutesList(institutesRes?.data?.data || []);
-        setDegreesList(degreesRes?.data?.data || []);
+      setCountriesList(profileViewRes?.data?.countries_list || []);
+      setStatesList(profileViewRes?.data?.state_list || []);
+      setStatusOptions(statusRes?.data?.data || []);
+      setGenderOptions(genderRes?.data?.data || []);
+      setInstitutesList(institutesRes?.data?.data || []);
+      setDegreesList(degreesRes?.data?.data || []);
+      if (companiesRes?.data?.data)
+        setCompaniesList(
+          companiesRes.data.data.filter((c) => c.text && c.text.trim() !== "-")
+        );
+      if (designationsRes?.data?.data)
+        setDesignationsList(
+          designationsRes.data.data.filter(
+            (d) => d.text && d.text.trim() !== "-"
+          )
+        );
 
-        if (companiesRes?.data?.data) {
-          setCompaniesList(companiesRes.data.data.filter(c => c.text && c.text.trim() !== "-"));
+      const profileData = profileViewRes?.data?.data;
+      const initialFormData = {};
+      if (profileData) {
+        Object.assign(initialFormData, {
+          first_name: profileData.first_name,
+          last_name: profileData.last_name,
+          master_gender_id: profileData.master_gender_id,
+          linkedin_url: profileData.linkedin_url,
+          date_of_birth: profileData.date_of_birth
+            ? profileData.date_of_birth.split("T")[0]
+            : null,
+          email_id: profileData.email_id,
+          contact_no: profileData.contact_no,
+          master_country: profileData.master_country_id,
+          master_state: profileData.master_state_id,
+          address: profileData.address,
+          street: profileData.street,
+          area: profileData.area,
+          city: profileData.city,
+          pincode: profileData.pincode,
+          door_no: profileData.door_no,
+        });
+        const currentStatusArray =
+          profileData.user_current_status_user_current_status_user_idTousers;
+        if (currentStatusArray?.length > 0) {
+          initialFormData.master_user_current_status_id =
+            currentStatusArray[0].master_user_current_status_id;
         }
-        if (designationsRes?.data?.data) {
-          setDesignationsList(designationsRes.data.data.filter(d => d.text && d.text.trim() !== "-"));
-        }
-
-        const profileData = profileViewRes?.data?.data;
-        const initialFormData = {};
-
-        if (profileData) {
-          initialFormData.first_name = profileData.first_name;
-          initialFormData.last_name = profileData.last_name;
-          // ... and so on for all personal/communication fields
-          initialFormData.master_gender_id = profileData.master_gender_id;
-          initialFormData.linkedin_url = profileData.linkedin_url;
-          if (profileData.date_of_birth) initialFormData.date_of_birth = profileData.date_of_birth.split('T')[0];
-          initialFormData.email_id = profileData.email_id;
-          initialFormData.contact_no = profileData.contact_no;
-          initialFormData.master_country = profileData.master_country_id;
-          initialFormData.master_state = profileData.master_state_id;
-          initialFormData.address = profileData.address;
-          initialFormData.street = profileData.street;
-          initialFormData.area = profileData.area;
-          initialFormData.city = profileData.city;
-          initialFormData.pincode = profileData.pincode;
-          initialFormData.door_no = profileData.door_no;
-        }
-
-        const careerData = careerHistoryRes?.data?.data;
-        if (careerData) {
-          if (careerData.user_academics && careerData.user_academics.length > 0) {
-            const sortedAcademics = [...careerData.user_academics].sort((a, b) => new Date(b.end_date) - new Date(a.end_date));
-            const latestAcademic = sortedAcademics[0];
-            
-            initialFormData.user_academic_id = latestAcademic.user_academic_id;
-            initialFormData.institute = latestAcademic.master_organization_name;
-            initialFormData.degree = latestAcademic.master_education_degree_name;
-            initialFormData.institute_location = latestAcademic.location;
-            if (latestAcademic.end_date) initialFormData.graduation_date = latestAcademic.end_date.split('T')[0];
-          }
-
-          if (careerData.user_professions && careerData.user_professions.length > 0) {
-            const sortedProfessions = [...careerData.user_professions].sort((a, b) => new Date(b.end_date) - new Date(a.end_date));
-            const latestProfession = sortedProfessions[0];
-
-            // UPDATED: Storing the ID for editing
-            initialFormData.user_profession_id = latestProfession.user_profession_id; 
-            initialFormData.company_name = latestProfession.master_organization_name;
-            initialFormData.designation = latestProfession.master_designation_name;
-            initialFormData.company_location = latestProfession.location;
-            if (latestProfession.start_date) initialFormData.joining_date = latestProfession.start_date.split('T')[0];
-          }
-
-          if(careerData.total_experience_in_months) {
-            const years = Math.floor(careerData.total_experience_in_months / 12);
-            const months = careerData.total_experience_in_months % 12;
-            initialFormData.total_experience = `${years} years, ${months} months`;
-          }
-        }
-        
-        setFormData(initialFormData);
-
-      } catch (e) {
-        console.error("Failed to load initial data", e);
-        showSnackbar("Failed to load profile data.", "error");
       }
-    }
-    loadInitialData();
-  }, [refreshProfileData]);
 
-  const showSnackbar = (message, type) => setSnackbar({ open: true, message, type });
-  const handleChange = (e) => setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+      const careerData = careerHistoryRes?.data?.data;
+      if (careerData) {
+        if (careerData.user_academics?.length > 0) {
+          const latestAcademic = [...careerData.user_academics].sort(
+            (a, b) => new Date(b.end_date) - new Date(a.end_date)
+          )[0];
+          Object.assign(initialFormData, {
+            user_academic_id: latestAcademic.user_academic_id,
+            institute: latestAcademic.master_organization_name,
+            degree: latestAcademic.master_education_degree_name,
+            institute_location: latestAcademic.location,
+            graduation_date: latestAcademic.end_date
+              ? latestAcademic.end_date.split("T")[0]
+              : null,
+          });
+        }
+        if (careerData.user_professions?.length > 0) {
+          const sortedProfessions = [...careerData.user_professions].sort(
+            (a, b) => new Date(b.start_date) - new Date(a.start_date)
+          );
+          setProfessionalHistory(sortedProfessions);
+        } else {
+          setProfessionalHistory([]);
+        }
+      }
+      setFormData(initialFormData);
+    } catch (e) {
+      console.error("Failed to load initial data", e);
+      showSnackbar("Failed to load profile data.", "error");
+    }
+  }, [showSnackbar]);
+
+  useEffect(() => {
+    fetchProfileData();
+  }, [fetchProfileData]);
+
+  const handleChange = (e) =>
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleEditClick = (e, section) => {
     e.preventDefault();
     setOriginalFormData({ ...formData });
-    setEditingSections((prev) => ({ ...prev, [section]: true }));
+    setEditingSections({
+      personal: false,
+      communication: false,
+      status: false,
+      education: false,
+      [section]: true,
+    });
   };
 
   const handleCancelClick = (e) => {
     e.preventDefault();
-    setFormData(originalFormData);
-    setEditingSections({ personal: false, communication: false, career: false });
+    if (originalFormData) {
+      setFormData(originalFormData);
+    }
+    setEditingSections({
+      personal: false,
+      communication: false,
+      status: false,
+      education: false,
+    });
     setOriginalFormData(null);
+  };
+
+  const handleAddProfessional = () => {
+    setEditingJob(null);
+    setIsProfessionalModalOpen(true);
+  };
+
+  const handleEditProfessional = (job) => {
+    setEditingJob(job);
+    setIsProfessionalModalOpen(true);
   };
 
   const handleSavePersonalAndCommunication = async (e) => {
     e.preventDefault();
     setIsSaving(true);
-    const token = localStorage.getItem("authToken");
-    const userId = localStorage.getItem("userId");
-
-    const payload = {
-      required: "my_profile_update",
-      token,
-      user_id: Number(userId),
-      first_name: formData.first_name,
-      last_name: formData.last_name,
-      master_gender_id: Number(formData.master_gender_id),
-      linkedin_url: formData.linkedin_url,
-      date_of_birth: formData.date_of_birth ? new Date(formData.date_of_birth).toISOString() : null,
-      email_id: formData.email_id,
-      country_code: "+91",
-      mobile_no: formData.contact_no,
-      master_state: formData.master_state,
-      master_country: formData.master_country,
-      address: formData.address,
-      area: formData.area,
-      door_no: formData.door_no,
-      street: formData.street,
-      city: formData.city,
-      pincode: formData.pincode,
-    };
-
     try {
-      const saveResponse = await axios.post("https://dev.api-v1.dreambigportal.in/api/my_profile", payload);
-      if (saveResponse.data.status === 200) {
-        showSnackbar("Profile updated successfully!", "success");
-        setEditingSections({ personal: false, communication: false, career: false });
-        setOriginalFormData(null);
-        refreshProfileData();
-      } else {
-        showSnackbar(`Failed to update profile: ${saveResponse.data.message}`, "error");
-      }
+      await fetchProfileData();
+      refreshProfileData();
     } catch (err) {
-      console.error("Save Error:", err);
-      showSnackbar("An error occurred while saving. Please try again.", "error");
+      console.error("Error saving personal and communication details:", err);
     } finally {
       setIsSaving(false);
     }
   };
 
-  // --- UPDATED: This function now saves BOTH academic and professional details ---
-  const handleSaveCareer = async (e) => {
+  const handleSaveStatus = async (e) => {
     e.preventDefault();
     setIsSaving(true);
+    try {
+      await fetchProfileData();
+    } catch (err) {
+      console.error("Error saving status:", err);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleSaveEducation = async (e) => {
+    e.preventDefault();
+    setIsSaving(true);
+    try {
+      await fetchProfileData();
+    } catch {
+      console.error("Error saving education details");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleSaveProfessional = async (modalFormData) => {
     const token = localStorage.getItem("authToken");
     const userId = Number(localStorage.getItem("userId"));
+    const company = companiesList.find(
+      (c) => c.text.trim() === modalFormData.master_organization_name?.trim()
+    );
+    const designation = designationsList.find(
+      (d) => d.text.trim() === modalFormData.master_designation_name?.trim()
+    );
+
+    const professionData = {
+      user_id: userId,
+      master_organization_id: company
+        ? company.id
+        : modalFormData.master_organization_name,
+      master_designation_id: designation
+        ? designation.id
+        : modalFormData.master_designation_name,
+      start_date: modalFormData.start_date,
+      end_date: modalFormData.end_date || null,
+      location: modalFormData.location,
+    };
+    if (editingJob) {
+      professionData.user_profession_id = editingJob.user_profession_id;
+    }
 
     const payload = {
-        source: "set_profile",
-        user_id: userId,
-        token: token,
+      source: "set_profile",
+      user_professions: [professionData],
+      user_id: userId,
+      token,
     };
 
-    // Conditionally add academic data if present
-    if (formData.institute || formData.degree) {
-        const academicPayload = {
-            user_id: userId,
-            master_organization_id: formData.institute,
-            master_education_degree_id: formData.degree,
-            end_date: formData.graduation_date,
-            location: formData.institute_location,
-        };
-        if (formData.user_academic_id) {
-            academicPayload.user_academic_id = formData.user_academic_id;
-        }
-        payload.user_academics = [academicPayload];
-    }
-
-    // Conditionally add professional data if present
-    if (formData.company_name || formData.designation) {
-        const professionalPayload = {
-            user_id: userId,
-            master_organization_id: formData.company_name,
-            master_designation_id: formData.designation,
-            location: formData.company_location,
-            start_date: formData.joining_date,
-        };
-        if (formData.user_profession_id) {
-            professionalPayload.user_profession_id = formData.user_profession_id;
-        }
-        payload.user_professions = [professionalPayload];
-    }
-    
-    // Check if there is anything to save
-    if (!payload.user_academics && !payload.user_professions) {
-        showSnackbar("No career details to save.", "info");
-        setIsSaving(false);
-        return; 
-    }
-
     try {
-        const saveResponse = await axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", payload);
-        if (saveResponse.data.status === 200) {
-            showSnackbar("Career details updated successfully!", "success");
-            setEditingSections({ personal: false, communication: false, career: false });
-            setOriginalFormData(null);
-            refreshProfileData();
-        } else {
-            showSnackbar(`Failed to update career details: ${saveResponse.data.message}`, "error");
-        }
+      const res = await axios.post(
+        "https://dev.api-v1.dreambigportal.in/pub/public_api",
+        payload
+      );
+      if (res.data.status === 200) {
+        showSnackbar(
+          `Professional details ${
+            editingJob ? "updated" : "added"
+          } successfully!`,
+          "success"
+        );
+        setIsProfessionalModalOpen(false);
+        setEditingJob(null);
+        await fetchProfileData();
+      } else {
+        showSnackbar(`Failed to save details: ${res.data.message}`, "error");
+      }
     } catch (err) {
-        console.error("Career Save Error:", err);
-        showSnackbar("An error occurred while saving career details. Please try again.", "error");
-    } finally {
-        setIsSaving(false);
+      console.error("Professional Save Error:", err);
+      showSnackbar(
+        "An error occurred while saving. Please try again.",
+        "error"
+      );
     }
   };
 
@@ -893,16 +1151,6 @@ function Profile() {
 
   return (
     <div className="profile-container">
-      <svg className="gooey-svg-filter" style={{ display: 'none' }}>
-        <defs>
-          <filter id="gooey">
-            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
-            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="gooey" />
-            <feComposite in="SourceGraphic" in2="gooey" operator="atop" />
-          </filter>
-        </defs>
-      </svg>
-      
       <div className="profile-header">
         <div className="profile-avatar">
           <div className="avatar-wrapper">
@@ -910,21 +1158,35 @@ function Profile() {
             <label htmlFor="profilePictureInput" className="edit-icon">
               <LuPencil size={14} />
             </label>
-            <input type="file" id="profilePictureInput" style={{ display: "none" }} accept="image/*" />
+            <input
+              type="file"
+              id="profilePictureInput"
+              style={{ display: "none" }}
+              accept="image/*"
+            />
           </div>
           <div className="profile-info">
-            <h2 className="profile-name">{`${formData.first_name || ''} ${formData.last_name || ''}`}</h2>
+            <h2 className="profile-name">{`${formData.first_name || ""} ${
+              formData.last_name || ""
+            }`}</h2>
             <div className="progress-container">
               <div className="progress-bar-wrapper">
-                <LinearProgress variant="determinate" value={progressValue} className="custom-linear-progress" />
+                <LinearProgress
+                  variant="determinate"
+                  value={progressValue}
+                  className="custom-linear-progress"
+                />
               </div>
               <span className="progress-percentage">{`${progressValue}%`}</span>
             </div>
           </div>
         </div>
       </div>
-      
-      <form className="profile-form-container" onSubmit={handleSavePersonalAndCommunication}>
+
+      <form
+        className="profile-form-container"
+        onSubmit={handleSavePersonalAndCommunication}
+      >
         <PersonalDetails
           formData={formData}
           isEditing={editingSections.personal}
@@ -946,22 +1208,51 @@ function Profile() {
           handleCancelClick={handleCancelClick}
         />
       </form>
-      
-      <form className="profile-form-container" onSubmit={handleSaveCareer}>
-        <CareerDetails
+
+      <form className="profile-form-container" onSubmit={handleSaveStatus}>
+        <CurrentStatusDetails
           formData={formData}
-          isEditing={editingSections.career}
+          isEditing={editingSections.status}
           isSaving={isSaving}
           statusOptions={statusOptions}
-          institutesList={institutesList}
-          degreesList={degreesList}
-          companiesList={companiesList}
-          designationsList={designationsList}
           handleChange={handleChange}
-          handleEditClick={(e) => handleEditClick(e, "career")}
+          handleEditClick={(e) => handleEditClick(e, "status")}
           handleCancelClick={handleCancelClick}
         />
       </form>
+
+      <form className="profile-form-container" onSubmit={handleSaveEducation}>
+        <EducationDetails
+          formData={formData}
+          isEditing={editingSections.education}
+          isSaving={isSaving}
+          institutesList={institutesList}
+          degreesList={degreesList}
+          handleChange={handleChange}
+          handleEditClick={(e) => handleEditClick(e, "education")}
+          handleCancelClick={handleCancelClick}
+        />
+      </form>
+
+      <div className="profile-form-container">
+        <ProfessionalDetails
+          professionalHistory={professionalHistory}
+          onAdd={handleAddProfessional}
+          onEdit={handleEditProfessional}
+        />
+      </div>
+
+      <ProfessionalFormModal
+        isOpen={isProfessionalModalOpen}
+        onClose={() => {
+          setIsProfessionalModalOpen(false);
+          setEditingJob(null);
+        }}
+        onSave={handleSaveProfessional}
+        initialData={editingJob}
+        companiesList={companiesList}
+        designationsList={designationsList}
+      />
 
       {snackbar.open && (
         <Snackbar
