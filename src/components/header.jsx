@@ -1,42 +1,61 @@
+// src/header.jsx
+
 import { Link, useNavigate } from "react-router-dom";
-import "./header.css";
+import React, { useState, useEffect } from "react";
+import "./header.css"; 
 import { useProfile } from "../components/utils/ProfileContext.jsx";
 import { CircularProgress, Box } from "@mui/material";
+import logo from "../assets/caddcentre.svg"; 
 
-function Header() {
+function Header({ isSidebarCollapsed }) {
   const navigate = useNavigate();
+  const {  formData,profilePicture, progressValue, isLoading, error } = useProfile();
+  
+  const [isInitialLoadComplete, setIsInitialLoadComplete] = useState(false);
 
-  // Get ALL data from the context, including isLoading and error
-  const { formData, profilePicture, progressValue, isLoading, error } = useProfile();
+  useEffect(() => {
+    if (!isLoading && formData && Object.keys(formData).length > 0 && !isInitialLoadComplete) {
+      setIsInitialLoadComplete(true);
+    }
+  }, [isLoading, formData, isInitialLoadComplete]);
+
 
   const handleLogout = () => {
     localStorage.clear();
     navigate("/login");
   };
 
-  // ==================================================================
-  // THE FIX: Check for loading and error states at the TOP of the component.
-  // This is called an "early return" pattern.
-  // ==================================================================
-
-  // If data is still being fetched, return a simple placeholder.
-  if (isLoading) {
+  // FIX: Check for multiple possible keys for userName
+  const userName = formData?.first_name || formData?.name || "Guest"; 
+  const userNumber = formData?.contact_no || "";
+  const displayPicture = profilePicture || "default-profile.png"; 
+  const displayProgress = progressValue || 0;
+  
+  // --- Loading State ---
+  if (!isInitialLoadComplete && isLoading) {
     return (
-      <div className="header-root">
+      // Apply conditional class to root
+      <div className={`header-root ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+        {isSidebarCollapsed && (
+           <img src={logo} alt="Logo" className="header-logo" />
+        )}
         <div className="profile-icon">
           <p className="header-user-name">Loading...</p>
-          <div className="circular-progress-container" style={{ height: '65px' }}>
-            {/* You can show a spinner here if you want */}
+          <div className="circular-progress-container" style={{ height: '65px', width: '50px' }}>
+             <CircularProgress size={30} thickness={4} sx={{color: '#ccc'}} />
           </div>
         </div>
       </div>
     );
   }
 
-  // If there was an error, show an error message.
-  if (error) {
+  // --- Error State ---
+  if (error && !isInitialLoadComplete) {
     return (
-      <div className="header-root">
+      <div className={`header-root ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+        {isSidebarCollapsed && (
+           <img src={logo} alt="Logo" className="header-logo" />
+        )}
         <div className="profile-icon">
           <p className="header-user-name">Error</p>
         </div>
@@ -44,51 +63,55 @@ function Header() {
     );
   }
 
-  // This code below will ONLY run if isLoading is false and there is no error.
-  const userName = formData?.first_name || "Guest";
-  const userNumber = formData?.contact_no || "";
+  // This is the complete profile icon block
+  const ProfileIconBlock = (
+    <div className="profile-icon">
+      <p className="header-user-name">{userName}</p> 
+      <div className="circular-progress-container">
+        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+          <CircularProgress
+            variant="determinate" value={100} size={50} thickness={3}
+            sx={{ color: '#e0e0e0' }}
+          />
+          <CircularProgress
+            variant="determinate" value={displayProgress} size={50} thickness={3}
+            sx={{ color: '#4CAF50', position: 'absolute', left: 0 }}
+          />
+          <Box sx={{ top: 0, left: 0, bottom: 0, right: 0, position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <img src={displayPicture} alt="profile" className="header-profile-img-inside" />
+          </Box>
+        </Box>
+        <span className="circular-progress-label">{`${Math.round(displayProgress)}%`}</span>
+      </div>
+
+      {/* Dropdown Menu */}
+      <div className="profile-dropdown">
+        <div className="dropdown-header">
+          <img src={displayPicture} alt="profile" className="dropdown-profile-img" />
+          <div className="dropdown-user-info">
+            <p className="user-name">{userName}</p> 
+            <p className="user-detail">{userNumber}</p>
+          </div>
+        </div>
+        <hr className="dropdown-divider" />
+        <Link to="/profile" className="dropdown-link">Edit Profile</Link>
+        <button onClick={handleLogout} className="logout-link">Logout</button>
+      </div>
+    </div>
+  );
+
 
   return (
-    <div className="header-root">
-      <div className="profile-icon">
-        <p className="header-user-name">{userName}</p>
+    // Add conditional class to the root element
+    <div className={`header-root ${isSidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+      
+      {/* 1. Logo (appears only when sidebar is collapsed) */}
+      {isSidebarCollapsed && (
+        <img src={logo} alt="CADD Centre Logo" className="header-logo" />
+      )}
 
-        <div className="circular-progress-container">
-          <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-            <CircularProgress 
-              variant="determinate" 
-              value={100} 
-              size={50} 
-              thickness={3} 
-              sx={{ color: '#e0e0e0' }}
-            />
-            <CircularProgress 
-              variant="determinate" 
-              value={progressValue || 0} 
-              size={50} 
-              thickness={3} 
-              sx={{ color: '#4CAF50', position: 'absolute', left: 0 }}
-            />
-            <Box sx={{ top: 0, left: 0, bottom: 0, right: 0, position: 'absolute', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-              <img src={profilePicture} alt="profile" className="header-profile-img-inside" />
-            </Box>
-          </Box>
-          <span className="circular-progress-label">{`${Math.round(progressValue || 0)}%`}</span>
-        </div>
-        
-        <div className="profile-dropdown">
-          <div className="dropdown-header">
-            <img src={profilePicture} alt="profile" className="dropdown-profile-img" />
-            <div className="dropdown-user-info">
-              <p className="user-name">{userName}</p>
-              <p className="user-detail">{userNumber}</p>
-            </div>
-          </div>
-          <hr className="dropdown-divider" />
-          <Link to="/profile" className="dropdown-link">Edit Profile</Link>
-          <button onClick={handleLogout} className="logout-link">Logout</button>
-        </div>
-      </div>
+      {/* 2. Profile Icon (always rendered) */}
+      {ProfileIconBlock}
     </div>
   );
 }

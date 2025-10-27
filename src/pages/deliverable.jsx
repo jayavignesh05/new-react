@@ -19,7 +19,7 @@ function Deliverable() {
     const token = localStorage.getItem("authToken");
     try {
       const response = await axios.post(
-        "https://dev.api-v1.dreambigportal.in/api/my_courses",
+        "https://api-v1.dreambigportal.in/api/my_courses",
         {
           token: token,
           required: "my_course_deliverables_list",

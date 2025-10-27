@@ -6,7 +6,7 @@ import { GiAchievement } from "react-icons/gi";
 import logo from "../assets/certificate.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { useLocation } from "react-router-dom"; 
+import { useLocation } from "react-router-dom";
 import Loading from "../components/loading";
 
 function Certificates() {
@@ -18,9 +18,9 @@ function Certificates() {
   const completdate = location.state?.end_date;
 
   function certificateDownload(token, unique_id) {
-    const url = `https://dev.dreambigportal.com/public/api/certificate_download.php?JEcYWcmNeh=${token}&user_course_id=${unique_id}`;
-    const ur = window.open(url, "_blank");
-    return ur;
+    const url = `https://dreambigportal.com/public/api/certificate_download.php?JEcYWcmNeh=${token}&user_course_id=${unique_id}`;
+
+    return url;
   }
   const handleDownloadCertificates = async (unique_id) => {
     console.log(unique_id);
@@ -38,7 +38,7 @@ function Certificates() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://dev.api-v1.dreambigportal.in/api/get_course_completed_students",
+        "https://api-v1.dreambigportal.in/api/get_course_completed_students",
         {
           master_app_id: "5",
           source: "get_course_completed_students",
@@ -59,7 +59,7 @@ function Certificates() {
   }, []);
 
   if (loading) {
-    return (<Loading/>);
+    return <Loading />;
   }
 
   return (

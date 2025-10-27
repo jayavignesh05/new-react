@@ -1,17 +1,27 @@
-.app-header {
-  height: 70px;
-  background-color: #ffffff;
-  padding: 10px 40px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  position: sticky;
-  top: 0;
-  color: #333;
-  flex-shrink: 0;
+.header-root {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  z-index: 10;
+  gap: 15px;
+  margin-left: auto; 
 }
+
+.header-root .header-logo {
+  display: none;
+}
+
+.header-root.sidebar-collapsed {
+  width: 100%; 
+  display: flex;
+  justify-content: space-between; 
+  align-items: center;
+  margin-left: 0;
+}
+
+.header-root.sidebar-collapsed .header-logo {
+  display: block; 
+  height: 40px;
+}
+
 
 .profile-icon {
   position: relative;
@@ -21,6 +31,8 @@
   font-family: "Inter", sans-serif;
   font-weight: 500;
   cursor: pointer;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .profile-icon p {
@@ -49,7 +61,7 @@
   bottom: 0;
   background-color: white;
   color: #333;
-  border: 2px solid #4CAF50;
+  border: 2px solid #0f8522;
   border-radius: 8px;
   padding: 1px 5px;
   font-size: 12px;

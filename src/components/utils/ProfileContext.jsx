@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useMemo, useContext, useCallback } from "react";
 import axios from "axios";
 import { calculateProfileCompletion } from "./calculations"; 
-
+import { useLocation } from "react-router-dom";
 const ProfileContext = createContext();
 
 export const useProfile = () => useContext(ProfileContext);
@@ -16,6 +16,7 @@ export const ProfileProvider = ({ children }) => {
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const location = useLocation();
 
   // This function is now the central place to fetch ALL profile data
   const fetchProfileData = useCallback(async () => {
@@ -44,18 +45,18 @@ export const ProfileProvider = ({ children }) => {
         designationsRes
       ] = await Promise.all([
         // Personal and communication details
-        axios.post("https://dev.api-v1.dreambigportal.in/api/my_profile2", { token, user_id: Number(userId), required: "my_profile_view" }),
+        axios.post("https://api-v1.dreambigportal.in/api/my_profile2", { token, user_id: Number(userId), required: "my_profile_view" }),
         // Academic and professional history
-        axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "get_profile", user_id: Number(userId), token }),
+        axios.post("https://api-v5.dreambigportal.in/pub/public_api", { source: "get_profile", user_id: Number(userId), token }),
         // Profile picture
-        axios.post("https://dev.api-v1.dreambigportal.in/api/my_profile2", { required: "my_profile_picture", token, user_id: Number(userId) }),
+        axios.post("https://api-v5.dreambigportal.in/api/my_profile2", { required: "my_profile_picture", token, user_id: Number(userId) }),
         // Dropdown options start here
-        axios.post("https://dev.api-v1.dreambigportal.in/api/master", { source: "get_master_user_current_status", token }),
-        axios.post("https://dev.api-v1.dreambigportal.in/api/my_profile", { required: "gender_list", token }),
-        axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 1, org_type: 1, current_company_code: "91BS001", user_id: Number(userId), token }),
-        axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 3, current_company_code: "91BS001", user_id: Number(userId), token }),
-        axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 1, org_type: 2, current_company_code: "91BS001", user_id: Number(userId), token }),
-        axios.post("https://dev.api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 2, current_company_code: "91BS001", user_id: Number(userId), token }),
+        axios.post("https://api-v1.dreambigportal.in/api/master", { source: "get_master_user_current_status", token }),
+        axios.post("https://api-v1.dreambigportal.in/api/my_profile", { required: "gender_list", token }),
+        axios.post("https://api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 1, org_type: 1, current_company_code: "91BS001", user_id: Number(userId), token }),
+        axios.post("https://api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 3, current_company_code: "91BS001", user_id: Number(userId), token }),
+        axios.post("https://api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 1, org_type: 2, current_company_code: "91BS001", user_id: Number(userId), token }),
+        axios.post("https://api-v1.dreambigportal.in/pub/public_api", { source: "load_career_data", type: 2, current_company_code: "91BS001", user_id: Number(userId), token }),
       ]);
 
       setProfilePicture(profilePicRes?.data?.data?.picture || "");
@@ -133,7 +134,7 @@ export const ProfileProvider = ({ children }) => {
 
   useEffect(() => {
     fetchProfileData();
-  }, [fetchProfileData]);
+  }, [fetchProfileData,location]);
 
   const progressValue = useMemo(() => {
     if (!formData) return 0;
