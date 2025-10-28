@@ -16,8 +16,8 @@ import CreatableSelect from "react-select/creatable";
 import LinearProgress from "@mui/material/LinearProgress";
 import "./Profile.css";
 import Loading from "../components/loading";
-import Snackbar from "../components/snackbar";
 import { useProfile } from "../components/utils/ProfileContext";
+import { useSnackbar } from "../components/SnackbarProvider";
 
 // ===================================================================
 // UTILITY FUNCTION
@@ -1017,6 +1017,7 @@ function Profile() {
     error,
     // refreshProfileData,
   } = useProfile();
+  const { showSnackbar } = useSnackbar();
   const [formData, setFormData] = useState({});
   const [editingSections, setEditingSections] = useState({
     personal: false,
@@ -1025,11 +1026,6 @@ function Profile() {
   });
   const [originalFormData, setOriginalFormData] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: "",
-    type: "",
-  });
 
   // State for Education
   const [educationHistory, setEducationHistory] = useState([]);
@@ -1052,10 +1048,6 @@ function Profile() {
   const [designationsList, setDesignationsList] = useState([]);
 
   const dateInputRef = useRef(null);
-
-  const showSnackbar = useCallback((message, type) => {
-    setSnackbar({ open: true, message, type });
-  }, []);
 
   const fetchProfileData = useCallback(async () => {
     const token = localStorage.getItem("authToken");
@@ -1281,8 +1273,10 @@ function Profile() {
         // Personal Details
         first_name: formData.first_name || "",
         last_name: formData.last_name || "",
-        master_gender_id: formData.master_gender_id || null? Number(formData.master_gender_id) // String-ai Number aaga maattugiren
-          : null,
+        master_gender_id:
+          formData.master_gender_id || null
+            ? Number(formData.master_gender_id) // String-ai Number aaga maattugiren
+            : null,
         date_of_birth: dobISO,
         linkedin_url: formData.linkedin_url || "", // Ithu form-il irunthathu, serththullen
 
@@ -1317,8 +1311,7 @@ function Profile() {
       } else {
         showSnackbar(res.data.message || "Failed to update details.", "error");
       }
-    } catch (err) {
-      console.error("Profile Save Error:", err);
+    } catch {
       showSnackbar(
         "An error occurred while saving. Please try again.",
         "error"
@@ -1576,14 +1569,6 @@ function Profile() {
         companiesList={companiesList}
         designationsList={designationsList}
       />
-
-      {snackbar.open && (
-        <Snackbar
-          message={snackbar.message}
-          type={snackbar.type}
-          onClose={() => setSnackbar({ ...snackbar, open: false })}
-        />
-      )}
     </div>
   );
 }

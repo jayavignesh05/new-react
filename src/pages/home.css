@@ -477,3 +477,57 @@ box-shadow: rgba(0, 0, 0, 0.15) 0px 2px 8px;}
     width: 100%;
   }
 }
+/* src/home.css (Add these rules to your existing CSS file) */
+
+/* ---------------------------------------------------- */
+/* 1. Page Entrance Animation (for Home and Details page) */
+/* ---------------------------------------------------- */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px); /* Subtle slide down effect */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.my-courses-page {
+  /* ... (Keep existing styles like width, margin, padding) ... */
+  
+  /* Apply the entrance animation */
+  animation: pageFadeIn 0.5s ease-out forwards; 
+}
+
+
+/* ---------------------------------------------------- */
+/* 2. Card Click Transition (Blur and Fade-out) */
+/* ---------------------------------------------------- */
+
+/* Keyframes for the blur/fade effect */
+@keyframes fadeOutBlur {
+  to {
+    opacity: 0.3; /* Fade almost completely */
+    filter: blur(3px); /* Blur surrounding content */
+    pointer-events: none; /* Make them unclickable during transition */
+  }
+}
+
+/* State applied to the main container (Home.jsx wrapper) when a card is clicked */
+.my-courses-page.card-is-selected .course-card {
+  /* Apply animation to all cards */
+  animation: fadeOutBlur 0.4s forwards; /* 400ms animation duration */
+  transition: transform 0.4s ease-out, opacity 0.4s ease-out, filter 0.4s ease-out;
+}
+
+/* The clicked card must NOT fade out, and should have a slight visual lift */
+.course-cards.is-expanding {
+    /* Override the parent's fadeOutBlur animation */
+    animation: none !important; 
+    opacity: 1 !important;
+    filter: none !important;
+    /* Optional: Give a slight zoom to the clicked card */
+    transform: scale(1.02); 
+    transition: transform 0.4s ease-out;
+}

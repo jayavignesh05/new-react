@@ -114,7 +114,7 @@ function Payment() {
 
   // --- START: Updated JSX Return Section ---
   return (
-    <div>
+    <div className="payment-page">
       <div className="main-container">
         <div className="content">
           <div>

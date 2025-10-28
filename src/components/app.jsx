@@ -8,11 +8,12 @@ import Certificate from "../pages/Certificate";
 import Payment from "../pages/payment";
 import Profile from "../pages/profile";
 import Contact from "../pages/contact";
-import Deliverable from "../pages/deliverable";
+import Feedback from "../pages/feedback";
 import Login from "../pages/login";
 import About from "../pages/privacy";
 import ProtectedRoutes from "./proctedrouter"; 
 import { ProfileProvider } from '../components/utils/ProfileContext';
+import { SnackbarProvider } from "./SnackbarProvider";
 
 export default function MyApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -61,6 +62,7 @@ export default function MyApp() {
   return (
     <> 
       <ProfileProvider>
+        <SnackbarProvider>
             <Routes>
               <Route path="/login" element={<Login />} />
               <Route path="/privacy" element={<About />} />
@@ -83,7 +85,7 @@ export default function MyApp() {
                   <Route path="/dashboard" element={<Home />} />
                   <Route path="/Certificates" element={<Certificate />} />
                   <Route path="/payment" element={<Payment />} />
-                  <Route path="/deliverable" element={<Deliverable />} />
+                  <Route path="/feedback" element={<Feedback/>} />
                   <Route
                     path="/profile"
                     element={
@@ -95,6 +97,7 @@ export default function MyApp() {
                 </Route>
               </Route>
             </Routes>
+        </SnackbarProvider>
       </ProfileProvider>
     </>
   );

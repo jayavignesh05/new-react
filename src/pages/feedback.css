@@ -1,0 +1,146 @@
+/* src/pages/feedback.css */
+
+:root {
+  --brand-red: #e63946;
+  --color-border: #e5e7eb;
+  --text-primary: #1f2937;
+  --text-secondary: #6b7280;
+  --color-green: #22c55e;
+  --color-light-gray: #f3f4f6;
+  --color-white: #ffffff;
+}
+
+.feedback-page-container {
+  padding: 20px;
+  background: var(--color-light-gray);
+  border-radius: 12px;
+}
+
+.feedback-form {
+  background: var(--color-white);
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.form-title {
+  font-size: 1.8em;
+  color: var(--text-primary);
+  margin-bottom: 30px;
+  border-bottom: 2px solid var(--brand-red);
+  padding: 20px 0px 10px 0px;
+}
+
+.question-section {
+  margin-bottom: 30px;
+}
+
+.question-section h3 {
+  color: var(--brand-red);
+  font-size: 1.2em;
+  margin-bottom: 15px;
+  padding-top: 10px;
+  border-top: 1px solid var(--color-border);
+}
+
+.feedback-question-item {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+}
+
+.question-text {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+/* --- Answer Options: Radio Buttons --- */
+.answer-options-group {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.answer-option input[type="radio"] {
+  margin-right: 8px;
+  accent-color: var(--brand-red); /* Highlight radio button color */
+}
+
+/* --- Text Area --- */
+.feedback-textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+/* --- Star Rating --- */
+.star-rating-group {
+  display: flex;
+  gap: 5px;
+}
+
+/* --- Submission Button --- */
+.btn-submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10%;
+  padding: 15px;
+  background-color: var(--brand-red);
+  color: var(--color-white);
+  font-size: 1.1em;
+  font-weight: 700;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.btn-submit:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* --- Error/Success Messages --- */
+.error-message,
+.form-error-message {
+  color: var(--brand-red);
+  font-weight: 600;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.success-message {
+  text-align: center;
+  padding: 50px;
+  background: var(--color-white);
+  border-radius: 12px;
+}
+
+.success-message h2 {
+  color: var(--color-green);
+  font-size: 2em;
+}
+
+.btn-back {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 10px 20px;
+  background-color: var(--brand-red);
+  color: var(--color-white);
+  border-radius: 6px;
+  text-decoration: none;
+}
+.submit-section {
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
